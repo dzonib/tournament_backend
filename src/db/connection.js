@@ -1,11 +1,13 @@
 const Sequelize = require("sequelize");
 
+// Make another db for production, this one is not safe (db info pushed to github public repo)
+// .env is not in .gitignore
 const sequelize = new Sequelize(
-  "d4rvtsgnmdaimk",
-  "dthclwisuvdryk",
-  "10739dabcb8ceda7cdb2e7d78087b22b07cfb42287855e0102d973416afa2dac",
+  process.env.DATABASE_NAME,
+  process.env.DATABASE_USERNAME,
+  process.env.DATABASE_PASSWORD,
   {
-    host: "ec2-54-217-235-87.eu-west-1.compute.amazonaws.com",
+    host: process.env.DATABASE_HOST,
     dialect: "postgres",
     protocol: "postgres",
 
