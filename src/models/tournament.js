@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../db/connection");
 
-const User = sequelize.define("user", {
+const Tournament = sequelize.define("tournament", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -13,32 +13,20 @@ const User = sequelize.define("user", {
     type: Sequelize.STRING,
     allowNull: false
   },
-  surname: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  username: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  password: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  email: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  category: {
-    type: Sequelize.STRING,
+  beginDate: {
+    type: Sequelize.DATE,
     allowNull: false
   },
   bannerUrl: {
     type: Sequelize.STRING,
     defaultValue: "https://2.bp.blogspot.com/-uMj800QiZKk/Totq8mtVHRI/AAAAAAAABH0/Cbmc2fCm16w/s1600/star-trek-for-facebook.jpg"
   },
-  registrated: {
-    type: Sequelize.BOOLEAN,
+  status: {
+    type: Sequelize.STRING,
+    defaultValue: false
+  },
+  numberOfPlayers: {
+    type: Sequelize.INTEGER,
     defaultValue: false
   },
   deleted: {
@@ -47,4 +35,4 @@ const User = sequelize.define("user", {
   }
 });
 
-module.exports = User;
+module.exports = Tournament;
