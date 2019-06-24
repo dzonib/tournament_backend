@@ -9,7 +9,15 @@ const User = sequelize.define("user", {
     allowNull: false,
     primaryKey: true
   },
-  email: {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  surname: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  username: {
     type: Sequelize.STRING,
     allowNull: false
   },
@@ -17,6 +25,11 @@ const User = sequelize.define("user", {
     type: Sequelize.STRING,
     allowNull: false
   },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+
   glavatarUrl: {
     type: Sequelize.STRING,
     defaultValue:

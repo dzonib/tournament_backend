@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { AuthService } from "src/app/data/services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-auth",
@@ -13,12 +14,14 @@ export class LoginComponent implements OnInit {
     password: new FormControl("")
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {}
 
   submitHandler() {
-    this.authService.login(this.loginForm.value)
-      .subscribe(token => localStorage.setItem('token', token));
+    this.authService.login(this.loginForm.value).subscribe(token => {
+      localStorage.setItem("token", token);
+      this.router.navigate(["/dashboard"]);
+    });
   }
 }
