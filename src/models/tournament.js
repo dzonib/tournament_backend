@@ -27,7 +27,7 @@ const Tournament = sequelize.define("tournament", {
   },
   numberOfPlayers: {
     type: Sequelize.INTEGER,
-    defaultValue: false
+    allowNull: false
   },
   deleted: {
     type: Sequelize.BOOLEAN,

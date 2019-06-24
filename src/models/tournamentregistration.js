@@ -2,7 +2,7 @@ const Sequelize = require("sequelize");
 
 const sequelize = require("../db/connection");
 
-const Tournament = sequelize.define("tournament", {
+const TournamentRegistration = sequelize.define("tournamentregistration", {
 
   status: {
     type: Sequelize.BOOLEAN,
@@ -10,4 +10,4 @@ const Tournament = sequelize.define("tournament", {
   }
 });
 
-module.exports = Tournament;
+module.exports = TournamentRegistration;

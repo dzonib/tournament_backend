@@ -28,7 +28,6 @@ Match.belongsTo(User, { foreignKey: 'idGuestUser'});
 TournamentRegistration.belongsTo(User, { foreignKey: 'idUser'});
 Tournament.hasMany(TournamentRegistration, { foreignKey: 'idTournament'});
 
-
 const port = process.env.PORT || 5000;
 
 sequelize
