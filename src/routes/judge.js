@@ -56,20 +56,27 @@ router.post(
 
 // LOGIN JUDGE ROUTE
 router.post("/login", async (req, res, next) => {
-  const { email, password } = req.body;
-  const { error, firstName, lastName } = handleUserEmail(req.body.email);
+  const { password, username } = req.body;
 
-  if (error) {
-    return res.status(400).json({ msg: error });
-  }
+  // if logging with email
+  // const { error, firstName, lastName } = handleUserEmail(req.body.email);
+
+  // if (error) {
+  //   return res.status(400).json({ msg: error });
+  // }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
 
-    const passwordCheck = await bcrypt.compare(password, user.password);
+    // if password is hashed
+    // const passwordCheck = await bcrypt.compare(password, user.password);
 
-    if (!passwordCheck) {
-      res.status(400).json({ msg: "Wrong password" });
+    // if (!passwordCheck) {
+    //   return res.status(400).json({ msg: "Wrong password" });
+    // }
+
+    if (password !== user.password) {
+      return res.status(400).json({ msg: "Wrong password" });
     }
 
     if (!user) {
@@ -78,16 +85,13 @@ router.post("/login", async (req, res, next) => {
 
     // JWT PAYLOAD
     const payload = {
-      email,
-      firstName,
-      lastName,
-      glavatarUrl: user.glavatarUrl,
-      isJudge: user.isJudge
+      name: user.name,
+      surname: user.surname,
+      glavatar: user.bannerUrl,
+      category: user.category
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "24h"
-    });
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
 
     return res.json(token);
   } catch (e) {

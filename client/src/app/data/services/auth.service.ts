@@ -11,8 +11,8 @@ export class AuthService {
   private loginUrl = "http://localhost:5000/judge/login";
   constructor(private http: HttpClient) {}
 
-  login({ email, password }): Observable<string> {
-    return this.http.post<string>(this.loginUrl, { email, password });
+  login({ username, password }): Observable<string> {
+    return this.http.post<string>(this.loginUrl, { username, password });
   }
 
   loggedIn() {
