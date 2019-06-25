@@ -41,6 +41,7 @@ const User = sequelize.define("user", {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  
   deleted: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
