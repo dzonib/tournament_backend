@@ -1,12 +1,29 @@
-<form [formGroup]="loginForm" (ngSubmit)="submitHandler()">
-  <label
-    >Email
-    <input type="text" formControlName="email" placeholder="email" />
-  </label>
-  <label
-    >Password
-    <input type="password" formControlName="password" placeholder="password" />
-  </label>
-
-  <button>Login</button>
+<form [formGroup]="loginForm" (ngSubmit)="submitHandler()" class="form">
+  <h2>Login</h2>
+  <mat-form-field class="input">
+    <input
+      type="text"
+      matInput
+      formControlName="username"
+      placeholder="username"
+    />
+    <mat-error *ngIf="hasError('username', 'required')">
+      Username is required
+    </mat-error>
+    <mat-error *ngIf="hasError('username', 'minlength')">
+      Username must contain 4 slova
+    </mat-error>
+  </mat-form-field>
+  <mat-form-field class="input">
+    <input
+      type="password"
+      matInput
+      formControlName="password"
+      placeholder="password"
+    />
+    <mat-error *ngIf="hasError('password', 'required')">
+      Password is required
+    </mat-error>
+  </mat-form-field>
+  <button mat-raised-button color="accent">Login</button>
 </form>

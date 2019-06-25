@@ -1,6 +1,6 @@
 export interface Judge {
-  email: string;
-  firstName: string;
-  lastName: string;
-  isJudge: boolean;
+  name: string;
+  surname: string;
+  glavatar: string;
+  category: string;
 }
