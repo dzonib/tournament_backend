@@ -15,7 +15,7 @@ const Team = sequelize.define("team", {
   },
   country: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: true
   },
   bannerUrl: {
     type: Sequelize.STRING,
