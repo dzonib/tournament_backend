@@ -11,7 +11,7 @@ const hashPassword = require("../util/hashPassword");
 
 // REGISTER JUDGE ROUTE
 router.post(
-  "/register"/*,
+  "/register" /*,
   [
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Password must be between 5 and 30 charachters").isLength(
@@ -46,7 +46,14 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, salt);
 
       // CREATE NEW USER
-      user = await User.create({ username, name, surname, category, email, password: hashedPassword });
+      user = await User.create({
+        username,
+        name,
+        surname,
+        category,
+        email,
+        password: hashedPassword
+      });
 
       return res.json(user);
     } catch (e) {
@@ -67,13 +74,13 @@ router.post("/login", async (req, res, next) => {
   // }
 
   try {
+
     let user = await User.findOne({ where: {username} });
 
- 
 
-    // const newPassword = await bcrypt.hash('gaga', 10)
-    // console.log(newPassword)
-    // if password is hashed
+    // const salt = await bcrypt.genSalt(10);
+    // const newPassword = await bcrypt.hash(password, salt);
+
     const passwordCheck = await bcrypt.compare(password, user.password);
 
     if (!passwordCheck) {
@@ -92,9 +99,11 @@ router.post("/login", async (req, res, next) => {
       category: user.category
     };
 
+    // SIGN TOKEN AND RETURN IT TO CLIENT
     const token = jwt.sign(payload, process.env.JWT_SECRET);
     return res.json(token);
   } catch (e) {
+    console.log(e.message);
     return res.status(400).json({ msg: "Server Error" });
   }
 });
