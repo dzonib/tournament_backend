@@ -18,4 +18,4 @@ export const initialState: State = {
     teams: [],
     matches: []
   }
-}
+};

@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Judge } from "../models/judge";
 import * as jwt_decode from "jwt-decode";
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: "root"
@@ -12,7 +12,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login({ username, password }): Observable<string> {
-    console.log(username, password)
+
     return this.http.post<string>(this.loginUrl, { username, password });
   }
 
@@ -20,7 +20,7 @@ export class AuthService {
     return !!localStorage.getItem("token");
   }
 
-  decodeToken(): Judge {
+  decodeToken(): User {
     const token = localStorage.getItem("token");
     const decoded = jwt_decode(token);
 
