@@ -93,10 +93,14 @@ router.post("/login", async (req, res, next) => {
 
     // JWT PAYLOAD
     const payload = {
+      id: user.id,
       name: user.name,
       surname: user.surname,
-      glavatar: user.bannerUrl,
-      category: user.category
+      email: user.email,
+      bannerUrl: user.bannerUrl,
+      registrated: user.registrated,
+      category: user.category,
+      deleted: user.deleted
     };
 
     // SIGN TOKEN AND RETURN IT TO CLIENT

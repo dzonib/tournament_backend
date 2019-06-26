@@ -1,9 +1,14 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { StoreModule } from "@ngrx/store";
+import { mainReducer } from "./reducer";
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    StoreModule.forFeature("mainState", mainReducer)
+  ],
   providers: []
 })
 export class DataModule {}

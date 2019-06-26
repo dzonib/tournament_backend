@@ -15,6 +15,7 @@ import { TokenInterceptorService } from "./data/interceptors/token-interceptor.s
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { HeaderComponent } from "./components/header/header.component";
+import { DataModule } from './data/stores/store.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { HeaderComponent } from "./components/header/header.component";
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    DataModule,
     MaterialModule,
     StoreModule.forRoot({ router: routerReducer }),
     StoreDevtoolsModule.instrument({
