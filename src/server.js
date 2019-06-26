@@ -12,6 +12,7 @@ const TournamentRegistration = require("./models/tournamentregistration");
 // ROUTES IMPORT
 const judgeRoutes = require("./routes/judge");
 const teamRoutes = require("./routes/teams");
+const userRoutes = require("./routes/users");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 // DECLARE ROUTES
 app.use("/judge", judgeRoutes);
 app.use("/teams", teamRoutes);
+app.use("/users", userRoutes);
 
 // DATABASE CONNECTIONS
 Team.hasMany(Match, { foreignKey: "idHomeTeam" });
