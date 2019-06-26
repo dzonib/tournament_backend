@@ -67,7 +67,7 @@ router.post("/login", async (req, res, next) => {
   // }
 
   try {
-    let user = await User.findOne({ username });
+    let user = await User.findOne({ where: {username} });
 
  
 
@@ -103,6 +103,15 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/test", auth, (req, res) => {
   res.json(req.user);
+});
+
+router.get("/hash", async (req, res) => {
+
+  const { password } = req.body;
+    // HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+  res.json(hashedPassword);
 });
 
 module.exports = router;
