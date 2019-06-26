@@ -7,29 +7,30 @@ const router = express.Router();
 const User = require("../models/user");
 const handleUserEmail = require("../util/handleUserEmail");
 const auth = require("../middleware/auth");
+const hashPassword = require("../util/hashPassword");
 
 // REGISTER JUDGE ROUTE
 router.post(
-  "/register",
+  "/register"/*,
   [
     check("email", "Please enter a valid email").isEmail(),
     check("password", "Password must be between 5 and 30 charachters").isLength(
       { min: 5, max: 30 }
     )
-  ],
+  ]*/,
   async (req, res, next) => {
-    const errors = validationResult(req);
+    // const errors = validationResult(req);
 
-    const { error, firstName, lastName } = handleUserEmail(req.body.email);
+    // const { error, firstName, lastName } = handleUserEmail(req.body.email);
 
-    if (!errors.isEmpty()) {
-      return res.json(errors);
-    } else if (error) {
-      return res.status(400).json({ msg: error });
-    }
+    // if (!errors.isEmpty()) {
+    //   return res.json(errors);
+    // } else if (error) {
+    //   return res.status(400).json({ msg: error });
+    // }
 
     try {
-      const { email, password } = req.body;
+      const { username, name, surname, category, email, password } = req.body;
 
       // CHECK IF USER EXISTS
       let user = await User.findOne({ where: { email } });
@@ -42,14 +43,14 @@ router.post(
 
       // HASH PASSWORD
       const salt = await bcrypt.genSalt(10);
-      const newPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
       // CREATE NEW USER
-      user = await User.create({ email, password: newPassword, isJudge: true });
+      user = await User.create({ username, name, surname, category, email, password: hashedPassword });
 
       return res.json(user);
     } catch (e) {
-      return res.json({ msg: "Server Error" });
+      return res.json(e);
     }
   }
 );
@@ -66,16 +67,16 @@ router.post("/login", async (req, res, next) => {
   // }
 
   try {
-    const user = await User.findOne({ username });
+    let user = await User.findOne({ username });
 
+ 
+
+    // const newPassword = await bcrypt.hash('gaga', 10)
+    // console.log(newPassword)
     // if password is hashed
-    // const passwordCheck = await bcrypt.compare(password, user.password);
+    const passwordCheck = await bcrypt.compare(password, user.password);
 
-    // if (!passwordCheck) {
-    //   return res.status(400).json({ msg: "Wrong password" });
-    // }
-
-    if (password !== user.password) {
+    if (!passwordCheck) {
       return res.status(400).json({ msg: "Wrong password" });
     }
 
@@ -92,7 +93,6 @@ router.post("/login", async (req, res, next) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET);
-
     return res.json(token);
   } catch (e) {
     return res.status(400).json({ msg: "Server Error" });
@@ -102,8 +102,6 @@ router.post("/login", async (req, res, next) => {
 // TEST PROTECTED ROUTE
 
 router.get("/test", auth, (req, res) => {
-
-  
   res.json(req.user);
 });
 

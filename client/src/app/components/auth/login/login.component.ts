@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
 
   submitHandler() {
     this.authService.login(this.loginForm.value).subscribe(token => {
+      console.log(this.loginForm.value);
       console.log(token);
       localStorage.setItem("token", token);
       this.router.navigate(["/dashboard"]);

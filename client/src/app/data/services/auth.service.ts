@@ -12,6 +12,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login({ username, password }): Observable<string> {
+    console.log(username, password)
     return this.http.post<string>(this.loginUrl, { username, password });
   }
 
