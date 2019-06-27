@@ -6,10 +6,18 @@ import { map, switchMap, tap } from "rxjs/operators";
 import * as jwt_decode from "jwt-decode";
 
 import { AuthService } from "../../services/auth.service";
-import { SetUserRequest, ActionTypes, SetUser, GetAllPlayers, GetAllPlayersSuccess, GetAllTeams, GetAllTeamsSuccess } from "./actions";
+import {
+  SetUserRequest,
+  ActionTypes,
+  SetUser,
+  GetAllPlayers,
+  GetAllPlayersSuccess,
+  GetAllTeams,
+  GetAllTeamsSuccess
+} from "./actions";
 import { Router } from "@angular/router";
-import { PlayersService } from '../../services/players.service';
-import { TeamsService } from '../../services/teams.service';
+import { PlayersService } from "../../services/players.service";
+import { TeamsService } from "../../services/teams.service";
 
 @Injectable()
 export class MainEffect {
@@ -18,7 +26,7 @@ export class MainEffect {
     private authService: AuthService,
     private router: Router,
     private playersService: PlayersService,
-    private teamService: TeamsService,
+    private teamService: TeamsService
   ) {}
 
   @Effect()
@@ -38,20 +46,18 @@ export class MainEffect {
     })
   );
 
-
   @Effect()
   loadPlayers$: Observable<Action> = this.action$.pipe(
     ofType<GetAllPlayers>(ActionTypes.GET_ALL_PLAYERS),
     switchMap(() => {
       return this.playersService.getAllPlayers().pipe(
         map((players: any) => {
-           console.log(players);
+          console.log(players);
           return new GetAllPlayersSuccess(players);
         })
       );
     })
   );
-
 
   @Effect()
   loadTeams$: Observable<Action> = this.action$.pipe(
@@ -59,7 +65,7 @@ export class MainEffect {
     switchMap(() => {
       return this.teamService.getAllTeams().pipe(
         map((teams: any) => {
-           console.log(teams);
+          console.log(teams);
           return new GetAllTeamsSuccess(teams);
         })
       );
