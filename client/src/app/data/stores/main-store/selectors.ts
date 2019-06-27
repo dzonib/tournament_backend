@@ -1,9 +1,9 @@
 import {
   createFeatureSelector,
   createSelector,
-  MemoizedSelector
+  MemoizedSelector,
 } from "@ngrx/store";
-import { State } from "./state";
+import {State} from './state'
 import { Team } from "../../models/team";
 import { User } from "../../models/user";
 
@@ -23,9 +23,11 @@ export const selectUser: MemoizedSelector<State, User | {}> = createSelector(
   state => getUserData(state)
 );
 
+
 export const selectPlayersData = (state: State) => state.users;
 
 export const selectAllPlayers: MemoizedSelector<State, User[]> = createSelector(
   selectAllState,
   state => selectPlayersData(state)
 );
+

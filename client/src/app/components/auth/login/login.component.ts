@@ -7,9 +7,9 @@ import {
 } from "@angular/forms";
 import { AuthService } from "src/app/data/services/auth.service";
 import { Router } from "@angular/router";
-import { Store } from '@ngrx/store';
-import { State } from 'src/app/data/stores/main-store/state';
-import { SetUserRequest } from 'src/app/data/stores/main-store';
+import { Store } from "@ngrx/store";
+import { State } from "src/app/data/stores/main-store/state";
+import { SetUserRequest } from "src/app/data/stores/main-store";
 
 @Component({
   selector: "app-auth",
@@ -25,16 +25,22 @@ export class LoginComponent implements OnInit {
     password: new FormControl("", Validators.required)
   });
 
-  constructor(private authService: AuthService, private router: Router, private store: Store<State>) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private store: Store<State>
+  ) {}
 
   ngOnInit() {}
 
   public hasError = (controlName, errorName) => {
     return this.loginForm.controls[controlName].hasError(errorName);
-  }
+  };
 
   submitHandler() {
     this.store.dispatch(new SetUserRequest(this.loginForm.value));
+
+
 
     // this.authService.login(this.loginForm.value).subscribe(token => {
     //   console.log(this.loginForm.value);

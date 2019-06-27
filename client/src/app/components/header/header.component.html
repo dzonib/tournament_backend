@@ -2,7 +2,13 @@
   <span>Pro Evolution Soccer</span>
 
   <div>
-    <button mat-raised-button color="accent">Login</button>
-    <button mat-raised-button color="accent">Logout</button>
+    <!-- <button mat-raised-button color="accent" (click)="onLogin()">Login</button> -->
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="onLogout()"
+    >
+      Logout
+    </button>
   </div>
 </mat-toolbar>

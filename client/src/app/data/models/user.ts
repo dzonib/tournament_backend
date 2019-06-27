@@ -1,9 +1,9 @@
-enum Category {
-  admin,
-  judge,
-  employee,
-  anonymous
-}
+// enum Category {
+//   admin,
+//   judge,
+//   employee,
+//   anonymous
+// }
 
 export interface User {
   id: number;
@@ -11,7 +11,7 @@ export interface User {
   surname: string;
   username: string;
   email: string;
-  category: Category;
+  category: string;
   bannerUrl: string;
   registrated: boolean;
   deleted: boolean;

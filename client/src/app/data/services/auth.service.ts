@@ -17,9 +17,12 @@ export class AuthService {
   }
 
   loggedIn() {
-    // const token = localStorage.getItem('token');
-    // console.log(token)
-    return !!localStorage.getItem("token");
+    const token = localStorage.getItem('token');
+    if (token) {
+      return !!localStorage.getItem("token");
+    } else {
+      return false;
+    }
   }
 
   decodeToken(): User {
