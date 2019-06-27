@@ -22,3 +22,10 @@ export const selectUser: MemoizedSelector<State, User | {}> = createSelector(
   selectAllState,
   state => getUserData(state)
 );
+
+export const selectPlayersData = (state: State) => state.users;
+
+export const selectAllPlayers: MemoizedSelector<State, User[]> = createSelector(
+  selectAllState,
+  state => selectPlayersData(state)
+);
