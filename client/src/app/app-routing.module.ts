@@ -11,8 +11,8 @@ const routes: Routes = [
   { path: "", component: DashboardComponent, canActivate: [AuthGuard] },
   {
     path: "create-tournament",
-    component: TournamentFormComponent,
-    canActivate: [AuthGuard]
+    component: TournamentFormComponent/*,
+    canActivate: [AuthGuard]*/
   },
   { path: "login", component: LoginComponent, canActivate: [LoginGuard] }
 ];
