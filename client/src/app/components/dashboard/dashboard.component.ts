@@ -4,6 +4,7 @@ import { PlayersService } from "../../data/services/players.service";
 import { Store } from "@ngrx/store";
 import { GetAllPlayers, GetAllTeams } from "../../data/stores/main-store";
 import { State } from "../../data/stores/main-store/state";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-dashboard",
@@ -11,17 +12,26 @@ import { State } from "../../data/stores/main-store/state";
   styleUrls: ["./dashboard.component.css"]
 })
 export class DashboardComponent implements OnInit {
-  constructor(private teamsService: TeamsService, private playersService: PlayersService, private store: Store<State>) {}
+  constructor(
+    private teamsService: TeamsService,
+    private playersService: PlayersService,
+    private store: Store<State>,
+    private router: Router
+  ) {}
 
   ngOnInit() {}
 
   getAllTeams() {
-   // this.teamsService.getAllTeams().subscribe(teams => console.log(teams));
-   this.store.dispatch(new GetAllTeams());
+    // this.teamsService.getAllTeams().subscribe(teams => console.log(teams));
+    this.store.dispatch(new GetAllTeams());
   }
 
-  getAllPlayers(){
+  getAllPlayers() {
     //this.playersService.getAllPlayers().subscribe(players => console.log(players));
     this.store.dispatch(new GetAllPlayers());
+  }
+
+  linkToCreateTournamentForm() {
+    this.router.navigate(["/create-tournament"]);
   }
 }
