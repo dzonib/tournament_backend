@@ -8,8 +8,8 @@ import {
 import { AuthService } from "src/app/data/services/auth.service";
 import { Router } from "@angular/router";
 import { Store } from '@ngrx/store';
-import { State } from 'src/app/data/stores/state';
-import { SetUserRequest } from 'src/app/data/stores';
+import { State } from 'src/app/data/stores/main-store/state';
+import { SetUserRequest } from 'src/app/data/stores/main-store';
 
 @Component({
   selector: "app-auth",
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   public hasError = (controlName, errorName) => {
     return this.loginForm.controls[controlName].hasError(errorName);
-  };
+  }
 
   submitHandler() {
     this.store.dispatch(new SetUserRequest(this.loginForm.value));

@@ -4,8 +4,8 @@ import {
   MemoizedSelector
 } from "@ngrx/store";
 import { State } from "./state";
-import { Team } from "../models/team";
-import { User } from "../models/user";
+import { Team } from "../../models/team";
+import { User } from "../../models/user";
 
 export const selectAllState = createFeatureSelector<State>("mainState");
 

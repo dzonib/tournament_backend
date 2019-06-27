@@ -1,6 +1,6 @@
-import { Team } from "../models/team";
-import { User } from "../models/user";
-import { Tournament } from "../models/tournament";
+import { Team } from "../../models/team";
+import { User } from "../../models/user";
+import { Tournament } from "../../models/tournament";
 
 export interface State {
   user: User | {};

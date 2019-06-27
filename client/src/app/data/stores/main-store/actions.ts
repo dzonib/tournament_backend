@@ -1,6 +1,6 @@
 import { Action } from "@ngrx/store";
-import { Team } from "../models/team";
-import { User } from "../models/user";
+import { Team } from "../../models/team";
+import { User } from "../../models/user";
 
 export enum ActionTypes {
   SET_USER_REQUEST = "[User] Set user request",

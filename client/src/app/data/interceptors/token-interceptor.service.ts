@@ -13,7 +13,7 @@ export class TokenInterceptorService implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    // PROVJERITI DA LI POSTOJI TOKEN U LS
+    // CHECK IF THERE IS A TOKEN IN LS
     const token = this.authService.getToken();
 
     const modifiedReq = req.clone({

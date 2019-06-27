@@ -1,9 +1,9 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { StoreModule } from "@ngrx/store";
-import { mainReducer } from "./reducer";
-import { EffectsModule } from '@ngrx/effects';
-import { MainEffect } from './effects';
+import { mainReducer } from "./main-store/reducer";
+import { EffectsModule } from "@ngrx/effects";
+import { MainEffect } from "./main-store/effects";
 
 @NgModule({
   declarations: [],
