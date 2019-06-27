@@ -52,7 +52,6 @@ export class MainEffect {
     switchMap(() => {
       return this.playersService.getAllPlayers().pipe(
         map((players: any) => {
-          console.log(players);
           return new GetAllPlayersSuccess(players);
         })
       );
@@ -65,7 +64,6 @@ export class MainEffect {
     switchMap(() => {
       return this.teamService.getAllTeams().pipe(
         map((teams: any) => {
-          console.log(teams);
           return new GetAllTeamsSuccess(teams);
         })
       );

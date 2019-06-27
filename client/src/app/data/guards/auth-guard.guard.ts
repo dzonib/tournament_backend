@@ -25,6 +25,7 @@ export class AuthGuard implements CanActivate {
     if (this.authService.loggedIn() && this.category === "judge") {
       return true;
     } else {
+      console.log("NOT AUTHED")
       this.router.navigate(["/login"]);
       return false;
     }

@@ -3,6 +3,7 @@ import { Validators, FormGroup, FormBuilder } from "@angular/forms";
 import { MatTableDataSource } from "@angular/material/table";
 import { SelectionModel } from "@angular/cdk/collections";
 
+
 import { User } from "../../data/models/user";
 
 import { Store } from "@ngrx/store";
@@ -10,12 +11,19 @@ import { GetAllPlayers, GetAllTeams, GetAllTeamsSuccess } from "../../data/store
 import { State } from "../../data/stores/main-store/state";
 import { selectAllPlayers } from "../../data/stores/main-store/selectors";
 
+
+import { GetAllTeams } from "src/app/data/stores/main-store";
+import { Team } from "src/app/data/models/team";
+import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
+
+
 @Component({
   selector: "app-tournament-form",
   templateUrl: "./tournament-form.component.html",
   styleUrls: ["./tournament-form.component.css"]
 })
 export class TournamentFormComponent implements OnInit {
+
 
   players: User[];
 
@@ -29,6 +37,13 @@ export class TournamentFormComponent implements OnInit {
 
   dataSourcePlayers = new MatTableDataSource<any>(this.players);
   selectionForPlayers = new SelectionModel<User[]>(true, []);
+
+  league: string;
+  teams: Team[];
+  displayedColumns: string[] = ["select", "name", "banner", "league"];
+  dataSource = new MatTableDataSource<any>(this.teams);
+  selection = new SelectionModel<Team>(true, []);
+
 
   isLinear = false;
   firstFormGroup: FormGroup;
@@ -44,12 +59,19 @@ export class TournamentFormComponent implements OnInit {
       secondCtrl: ["", Validators.required]
     });
 
+
     //GET PLAYERS
 
     this.store.dispatch(new GetAllPlayers());
     this.store.select(selectAllPlayers).subscribe(data => {
       this.players = data;
       this.dataSourcePlayers = new MatTableDataSource<any>(this.players);
+
+    this.store.dispatch(new GetAllTeams());
+    this.store.select(selectAllTeams).subscribe(teams => {
+      this.teams = teams;
+      this.dataSource = new MatTableDataSource(this.teams);
+
     });
   }
 
@@ -68,7 +90,16 @@ export class TournamentFormComponent implements OnInit {
   }
 
   /** The label for the checkbox on the passed row */
-  checkboxLabelPlayers(row?: any): string {
+
+checkboxLabel(row?: any): string {
+    if (!row) {
+      return `${this.isAllSelected() ? "select" : "deselect"} all`;
+    }
+    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${
+      row.id
+    }`;
+  }
+    checkboxLabelPlayers(row?: any): string {
     if (!row) {
       return `${this.isAllSelectedPlayers() ? "select" : "deselect"} all`;
     }
@@ -76,4 +107,6 @@ export class TournamentFormComponent implements OnInit {
       this.selectionForPlayers.isSelected(row) ? "deselect" : "select"
     } row ${row.id}`;
   }
+
+ 
 }

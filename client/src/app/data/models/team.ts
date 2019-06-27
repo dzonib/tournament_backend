@@ -4,5 +4,5 @@ export interface Team {
   country: string | null;
   bannerUrl: string;
   leagueName: string;
-  deleted: boolean;
+  deleted?: boolean;
 }
