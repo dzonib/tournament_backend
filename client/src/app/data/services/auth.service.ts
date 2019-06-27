@@ -17,6 +17,8 @@ export class AuthService {
   }
 
   loggedIn() {
+    // const token = localStorage.getItem('token');
+    // console.log(token)
     return !!localStorage.getItem("token");
   }
 

@@ -35,6 +35,7 @@ export class LoginComponent implements OnInit {
 
   submitHandler() {
     this.store.dispatch(new SetUserRequest(this.loginForm.value));
+
     // this.authService.login(this.loginForm.value).subscribe(token => {
     //   console.log(this.loginForm.value);
     //   console.log(token);
