@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import {
   Validators,
@@ -5,8 +6,14 @@ import {
   FormControl,
   FormBuilder
 } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+
 import { SelectionModel } from '@angular/cdk/collections';
+
+import { Component, OnInit } from "@angular/core";
+import { Validators, FormGroup, FormBuilder } from "@angular/forms";
+import { MatTableDataSource } from "@angular/material/table";
+import * as jwt_decode from "jwt-decode";
+
 
 import { User } from '../../data/models/user';
 
@@ -14,10 +21,12 @@ import { Store } from '@ngrx/store';
 import {
   GetAllPlayers,
   GetAllTeams,
-  GetAllTeamsSuccess
-} from '../../data/stores/main-store';
-import { State } from '../../data/stores/main-store/state';
-import { selectAllPlayers } from '../../data/stores/main-store/selectors';
+  GetAllTeamsSuccess,
+  SetUser
+} from "../../data/stores/main-store";
+import { State } from "../../data/stores/main-store/state";
+import { selectAllPlayers } from "../../data/stores/main-store/selectors";
+
 
 import { Team } from 'src/app/data/models/team';
 import { Util } from 'src/app/data/models/util';
@@ -70,6 +79,18 @@ export class TournamentFormComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // check if there is token i ls and set user if there is
+    // CHECK IF THERE IS BETTER WAY!! need to do this on every protected route -.-
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      console.log("ASDASDASDASDSADASDASDSD")
+      const user = jwt_decode(token);
+      this.store.dispatch(new SetUser(user));
+    }
+// --------------------------------------------------------------------------
+
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required]
     });

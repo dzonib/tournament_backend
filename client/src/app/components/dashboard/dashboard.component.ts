@@ -2,9 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { TeamsService } from "../../data/services/teams.service";
 import { PlayersService } from "../../data/services/players.service";
 import { Store } from "@ngrx/store";
-import { GetAllPlayers, GetAllTeams } from "../../data/stores/main-store";
+import { GetAllPlayers, GetAllTeams, SetUser } from "../../data/stores/main-store";
 import { State } from "../../data/stores/main-store/state";
 import { Router } from "@angular/router";
+import * as jwt_decode from "jwt-decode";
 
 @Component({
   selector: "app-dashboard",
@@ -19,7 +20,9 @@ export class DashboardComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+
+  }
 
   getAllTeams() {
     // this.teamsService.getAllTeams().subscribe(teams => console.log(teams));

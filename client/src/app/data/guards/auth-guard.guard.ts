@@ -1,33 +1,38 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
-import { AuthService } from "../services/auth.service";
 import { Store } from "@ngrx/store";
 import { State } from "../stores/main-store/state";
-import { selectUser } from "../stores/main-store/selectors";
-import { User } from "../models/user";
+import * as jwt_decode from "jwt-decode";
+import { SetUser } from "../stores/main-store";
 
 @Injectable({
   providedIn: "root"
 })
 export class AuthGuard implements CanActivate {
   category: string;
+  private executed: boolean;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private store: Store<State>
-  ) {}
+  constructor(private store: Store<State>) {}
 
   canActivate(): boolean {
-    this.store
-      .select(selectUser)
-      .subscribe((data: User) => (this.category = data.category));
-    if (this.authService.loggedIn() && this.category === "judge") {
-      return true;
-    } else {
-      console.log("NOT AUTHED")
-      this.router.navigate(["/login"]);
-      return false;
+    return this.canFire();
+  }
+
+  canFire() {
+    if (!this.executed) {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const user = jwt_decode(token);
+        this.store.dispatch(new SetUser(user));
+
+        if (user.category === "judge") {
+          return true;
+        }
+        this.executed = true;
+        return false;
+      } else {
+        return false;
+      }
     }
   }
 }
