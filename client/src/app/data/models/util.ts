@@ -1,5 +1,5 @@
 
 export interface Util {
   key: number;
-  value: number;
+  value: any;
 }

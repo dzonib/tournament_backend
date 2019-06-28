@@ -3,26 +3,33 @@
 </button>
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
   <!--NUMBER OF PLAYERS-->
-  <mat-step [stepControl]="thirdFormGroup">
+ <mat-step [stepControl]="thirdFormGroup">
     <form [formGroup]="thirdFormGroup">
-      <ng-template matStepLabel>Number of participants</ng-template>
-      <br />
+      <ng-template matStepLabel>Tournaments</ng-template>
+      <br/>
 
       <mat-form-field>
         <mat-label>Select number of participants </mat-label>
-        <mat-select matNativeControl required [formControl]="numberFormControl">
-          <mat-option>--</mat-option>
-          <mat-option
-            *ngFor="let num of numberOfParticipants"
-            [value]="num.value"
-          >
-            {{ num.key }}
+        <mat-select matNativeControl required [formControl]="numberFormControl" (selectionChange)="numberOfPlayersSelectionChange($event)">
+            <mat-option>--</mat-option>
+          <mat-option *ngFor="let num of numberOfParticipants" [value]="num.value">
+            {{num.key}}
           </mat-option>
         </mat-select>
-        <mat-error *ngIf="numberFormControl.hasError('required')"
-          >Please choose number</mat-error
-        >
+        <mat-error *ngIf="numberFormControl.hasError('required')">Please choose number</mat-error>
       </mat-form-field>
+
+      <br/>
+
+      <mat-form-field class="input">
+          <input
+            type="nameOfTournament"
+            matInput
+            formControlName="nameOfTournament"
+            placeholder="Name of tournament"
+          />
+          <mat-error *ngIf="nameOfTournament.hasError('required')">Name of tournament is required!</mat-error>
+        </mat-form-field>
 
       <div>
         <button mat-button matStepperNext>Next</button>
@@ -109,7 +116,7 @@
 
   <!-- TEAMS -->
 
-  <mat-step>
+   <mat-step>
     <div *ngIf="selection.selected.length > 0">
       <h2>Selected Teams</h2>
       <p *ngFor="let team of selection.selected; let i = index">

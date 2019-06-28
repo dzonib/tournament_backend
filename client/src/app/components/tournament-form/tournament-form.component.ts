@@ -1,4 +1,6 @@
+
 import { Component, OnInit, OnDestroy } from "@angular/core";
+
 import {
   Validators,
   FormGroup,
@@ -21,6 +23,10 @@ import { Team } from "src/app/data/models/team";
 import { Util } from "src/app/data/models/util";
 import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 
+
+import * as jwt_decode from 'jwt-decode';
+
+
 @Component({
   selector: "app-tournament-form",
   templateUrl: "./tournament-form.component.html",
@@ -29,7 +35,12 @@ import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 export class TournamentFormComponent implements OnInit, OnDestroy {
   private subs = new SubSink();
   players: User[];
+
   selectedTeams: Team[];
+  numberOfParticipantsVal: number;
+  tournamentStatusVal: string;
+  beginDate = new Date();
+
 
   displayedColumnsForPlayers: string[] = [
     "select",
@@ -90,6 +101,7 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   numberFormControl: FormControl;
+
   leagueFormControl: FormControl;
 
   constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
@@ -100,11 +112,20 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
 
     this.leagueFormControl = new FormControl("", [Validators.required]);
     this.firstFormGroup = this._formBuilder.group({
-      leagueFormControl: this.numberFormControl
+      leagueFormControl: this.numberFormControl;
+      nameOfTournament: FormControl;
+
+  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
+    this.numberFormControl = new FormControl('', [Validators.required]);
+    this.nameOfTournament = new FormControl('', [Validators.required]);
+    this.thirdFormGroup = this._formBuilder.group({
+      numberFormControl: this.numberFormControl,
+      nameOfTournament: this.nameOfTournament
     });
   }
 
   ngOnInit() {
+
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
@@ -128,6 +149,27 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource(this.teams);
       });
     });
+  }
+
+  numberOfPlayersSelectionChange(event) {
+    console.log(event.value);
+    this.numberOfParticipantsVal = event.value;
+    if (this.numberOfParticipantsVal === 2) {
+      this.tournamentStatusVal = "finale";
+      console.log(this.tournamentStatusVal);
+    } else if (this.numberOfParticipantsVal === 4) {
+      this.tournamentStatusVal = "semi-finals";
+      console.log(this.tournamentStatusVal);
+    } else if (this.numberOfParticipantsVal === 8) {
+      this.tournamentStatusVal = "quarter-finals";
+      console.log(this.tournamentStatusVal);
+    } else if (this.numberOfParticipantsVal === 16) {
+      this.tournamentStatusVal = "8th-finals";
+      console.log(this.tournamentStatusVal);
+    } else if (this.numberOfParticipantsVal === 32) {
+      this.tournamentStatusVal = "16th-finals";
+      console.log(this.tournamentStatusVal);
+    }
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
