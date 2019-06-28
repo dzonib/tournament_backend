@@ -1,51 +1,42 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import {
   Validators,
   FormGroup,
   FormControl,
   FormBuilder
-} from '@angular/forms';
+} from "@angular/forms";
+import { SubSink } from "subsink";
+import { SelectionModel } from "@angular/cdk/collections";
 
-import { SelectionModel } from '@angular/cdk/collections';
-
-import { Component, OnInit } from "@angular/core";
-import { Validators, FormGroup, FormBuilder } from "@angular/forms";
 import { MatTableDataSource } from "@angular/material/table";
-import * as jwt_decode from "jwt-decode";
 
+import { User } from "../../data/models/user";
 
-import { User } from '../../data/models/user';
-
-import { Store } from '@ngrx/store';
-import {
-  GetAllPlayers,
-  GetAllTeams,
-  GetAllTeamsSuccess,
-  SetUser
-} from "../../data/stores/main-store";
+import { Store } from "@ngrx/store";
+import { GetAllPlayers, GetAllTeams } from "../../data/stores/main-store";
 import { State } from "../../data/stores/main-store/state";
 import { selectAllPlayers } from "../../data/stores/main-store/selectors";
 
-
-import { Team } from 'src/app/data/models/team';
-import { Util } from 'src/app/data/models/util';
-import { selectAllTeams } from 'src/app/data/stores/main-store/selectors';
+import { Team } from "src/app/data/models/team";
+import { Util } from "src/app/data/models/util";
+import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 
 @Component({
-  selector: 'app-tournament-form',
-  templateUrl: './tournament-form.component.html',
-  styleUrls: ['./tournament-form.component.css']
+  selector: "app-tournament-form",
+  templateUrl: "./tournament-form.component.html",
+  styleUrls: ["./tournament-form.component.css"]
 })
-export class TournamentFormComponent implements OnInit {
+export class TournamentFormComponent implements OnInit, OnDestroy {
+  private subs = new SubSink();
   players: User[];
+  selectedTeams: Team[];
 
   displayedColumnsForPlayers: string[] = [
-    'select',
-    'position',
-    'name',
-    'surname',
-    'username'
+    "select",
+    "position",
+    "name",
+    "surname",
+    "username"
   ];
 
   numberOfParticipants: Util[] = [
@@ -56,46 +47,69 @@ export class TournamentFormComponent implements OnInit {
     { key: 32, value: 32 }
   ];
 
+  leagues: any[] = [
+    { value: 1, key: "Ligue 1 Conforama" },
+    { value: 2, key: "Other European Leagues" },
+    { value: 3, key: "English 2nd Division" },
+    { value: 4, key: "English League" },
+    { value: 5, key: "Campeonato Nacional Scotiabank" },
+    { value: 6, key: "Jupiler Pro League" },
+    { value: 7, key: "Asia-Oceania" },
+    { value: 8, key: "South America" },
+    { value: 9, key: "Russian Premier Liga" },
+    { value: 10, key: "Italian League" },
+    { value: 11, key: "Africa" },
+    { value: 12, key: "Spanish League" },
+    { value: 13, key: "Ladbrokes Premiership" },
+    { value: 14, key: "AFC Champions League" },
+    { value: 15, key: "Spor Toto Süper Lig" },
+    { value: 16, key: "Superliga" },
+    { value: 17, key: "North & Central America" },
+    { value: 18, key: "Europe" },
+    { value: 19, key: "Superliga Quilmes Clásica" },
+    { value: 20, key: "Liga NOS" },
+    { value: 21, key: "Other Latin American Teams" },
+    { value: 22, key: "Eredivisie" },
+    { value: 23, key: "CAMPEONATO BRASILEIRO" },
+    { value: 24, key: "Domino's Ligue 2" },
+    { value: 25, key: "Raiffeisen Super League" }
+  ];
+
   dataSourcePlayers = new MatTableDataSource<any>(this.players);
   selectionForPlayers = new SelectionModel<User[]>(true, []);
 
   league: string;
   teams: Team[];
-  displayedColumns: string[] = ['select', 'name', 'banner', 'league'];
-  dataSource = new MatTableDataSource<any>(this.teams);
+  teamsToShow: Team[];
+  displayedColumns: string[] = ["select", "name", "banner", "league"];
+  dataSource = new MatTableDataSource<any>(this.teamsToShow);
   selection = new SelectionModel<Team>(true, []);
 
   isLinear = false;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
-
   numberFormControl: FormControl;
+  leagueFormControl: FormControl;
 
   constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
-
     this.numberFormControl = new FormControl("", [Validators.required]);
-    this.thirdFormGroup = this._formBuilder.group({numberFormControl: this.numberFormControl});
+    this.thirdFormGroup = this._formBuilder.group({
+      numberFormControl: this.numberFormControl
+    });
+
+    this.leagueFormControl = new FormControl("", [Validators.required]);
+    this.firstFormGroup = this._formBuilder.group({
+      leagueFormControl: this.numberFormControl
+    });
   }
 
   ngOnInit() {
-
-    // check if there is token i ls and set user if there is
-    // CHECK IF THERE IS BETTER WAY!! need to do this on every protected route -.-
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      console.log("ASDASDASDASDSADASDASDSD")
-      const user = jwt_decode(token);
-      this.store.dispatch(new SetUser(user));
-    }
-// --------------------------------------------------------------------------
-
     this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
+      firstCtrl: ["", Validators.required]
     });
     this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
+      secondCtrl: ["", Validators.required]
     });
 
     //this.thirdFormGroup = this._formBuilder.group({numberFormControl: this.numberFormControl});
@@ -103,12 +117,13 @@ export class TournamentFormComponent implements OnInit {
     //GET PLAYERS
 
     this.store.dispatch(new GetAllPlayers());
-    this.store.select(selectAllPlayers).subscribe(data => {
+
+    this.subs.sink = this.store.select(selectAllPlayers).subscribe(data => {
       this.players = data;
       this.dataSourcePlayers = new MatTableDataSource<any>(this.players);
 
       this.store.dispatch(new GetAllTeams());
-      this.store.select(selectAllTeams).subscribe(teams => {
+      this.subs.sink = this.store.select(selectAllTeams).subscribe(teams => {
         this.teams = teams;
         this.dataSource = new MatTableDataSource(this.teams);
       });
@@ -149,18 +164,40 @@ export class TournamentFormComponent implements OnInit {
 
   checkboxLabel(row?: any): string {
     if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+      return `${this.isAllSelected() ? "select" : "deselect"} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${
+    return `${this.selection.isSelected(row) ? "deselect" : "select"} row ${
       row.id
     }`;
   }
   checkboxLabelPlayers(row?: any): string {
     if (!row) {
-      return `${this.isAllSelectedPlayers() ? 'select' : 'deselect'} all`;
+      return `${this.isAllSelectedPlayers() ? "select" : "deselect"} all`;
     }
     return `${
-      this.selectionForPlayers.isSelected(row) ? 'deselect' : 'select'
+      this.selectionForPlayers.isSelected(row) ? "deselect" : "select"
     } row ${row.id}`;
+  }
+
+  leagueSelection(e) {
+    this.teamsToShow = this.teams.filter(team => team.leagueName === e.value);
+    this.dataSource = new MatTableDataSource<any>(this.teamsToShow);
+    // this.selection = new SelectionModel<Team>(true, []);
+    console.log(this.selection.selected);
+  }
+
+  // FOR DEBUGGING DELETE LATER
+  // logSelection() {
+  //   console.log(this.selection);
+  // }
+
+  removeTeam(team) {
+    this.selection.deselect(team);
+    // console.log(this.selection);
+    // .selected = this.selection.selected.filter((team) => team.id !== id)
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }
