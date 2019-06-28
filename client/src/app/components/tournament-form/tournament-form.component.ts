@@ -101,26 +101,21 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   secondFormGroup: FormGroup;
   thirdFormGroup: FormGroup;
   numberFormControl: FormControl;
-
+  nameOfTournament: FormControl;
   leagueFormControl: FormControl;
 
   constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
     this.numberFormControl = new FormControl("", [Validators.required]);
-    this.thirdFormGroup = this._formBuilder.group({
-      numberFormControl: this.numberFormControl
-    });
-
-    this.leagueFormControl = new FormControl("", [Validators.required]);
-    this.firstFormGroup = this._formBuilder.group({
-      leagueFormControl: this.numberFormControl;
-      nameOfTournament: FormControl;
-
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
-    this.numberFormControl = new FormControl('', [Validators.required]);
     this.nameOfTournament = new FormControl('', [Validators.required]);
     this.thirdFormGroup = this._formBuilder.group({
       numberFormControl: this.numberFormControl,
       nameOfTournament: this.nameOfTournament
+    });
+
+    this.leagueFormControl = new FormControl("", [Validators.required]);
+    this.firstFormGroup = this._formBuilder.group({
+      leagueFormControl: this.numberFormControl
+
     });
   }
 
