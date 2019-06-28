@@ -83,6 +83,7 @@
               (change)="$event ? selectionForPlayers.toggle(row) : null"
               [checked]="selectionForPlayers.isSelected(row)"
               [aria-label]="checkboxLabelPlayers(row)"
+              [disabled]="numberOfParticipantsVal <= selectionForPlayers.selected.length"
             >
             </mat-checkbox>
           </td>
@@ -178,6 +179,7 @@
               (change)="$event ? selection.toggle(row) : null"
               [checked]="selection.isSelected(row)"
               [aria-label]="checkboxLabel(row)"
+              [disabled]="numberOfParticipantsVal <= selection.selected.length"
             >
             </mat-checkbox>
           </td>
