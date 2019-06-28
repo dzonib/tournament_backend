@@ -27,9 +27,17 @@
             matInput
             formControlName="nameOfTournament"
             placeholder="Name of tournament"
-          />
-          <mat-error *ngIf="nameOfTournament.hasError('required')">Name of tournament is required!</mat-error>
+          /><mat-error *ngIf="nameOfTournament.hasError('required')">Name of tournament is required!</mat-error>
+
         </mat-form-field>
+
+        <br/>
+
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Select date" [formControl]="beginDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
 
       <div>
         <button mat-button matStepperNext>Next</button>
@@ -39,6 +47,13 @@
 
   <!--PLAYERS-->
   <mat-step [stepControl]="secondFormGroup">
+      <div *ngIf="selectionForPlayers.selected.length > 0">
+          <h2>Selected Players</h2>
+          <p *ngFor="let player of selectionForPlayers.selected; let i = index">
+            {{ i + 1 }}. {{ player.name + ' ' + player.surname }} <span class="rmv" (click)="removeUser(player)">X</span>
+          </p>
+        </div>
+
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Select Players</ng-template>
       <br />

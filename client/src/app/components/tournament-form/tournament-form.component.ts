@@ -39,8 +39,6 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   selectedTeams: Team[];
   numberOfParticipantsVal: number;
   tournamentStatusVal: string;
-  beginDate = new Date();
-
 
   displayedColumnsForPlayers: string[] = [
     "select",
@@ -87,7 +85,7 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   ];
 
   dataSourcePlayers = new MatTableDataSource<any>(this.players);
-  selectionForPlayers = new SelectionModel<User[]>(true, []);
+  selectionForPlayers = new SelectionModel<any>(true, []);
 
   league: string;
   teams: Team[];
@@ -103,19 +101,23 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   numberFormControl: FormControl;
   nameOfTournament: FormControl;
   leagueFormControl: FormControl;
+  //beginDate = new FormControl(new Date());
+  beginDate: FormControl;
 
   constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
     this.numberFormControl = new FormControl("", [Validators.required]);
     this.nameOfTournament = new FormControl('', [Validators.required]);
+    this.beginDate = new FormControl(new Date(), [Validators.required]);
+   // this.beginDate = new FormControl('', [Validators.required]);
     this.thirdFormGroup = this._formBuilder.group({
       numberFormControl: this.numberFormControl,
-      nameOfTournament: this.nameOfTournament
+      nameOfTournament: this.nameOfTournament,
+      beginDate: this.beginDate
     });
 
     this.leagueFormControl = new FormControl("", [Validators.required]);
     this.firstFormGroup = this._formBuilder.group({
       leagueFormControl: this.numberFormControl
-
     });
   }
 
@@ -127,8 +129,6 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ["", Validators.required]
     });
-
-    //this.thirdFormGroup = this._formBuilder.group({numberFormControl: this.numberFormControl});
 
     //GET PLAYERS
 
@@ -223,15 +223,15 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
     console.log(this.selection.selected);
   }
 
-  // FOR DEBUGGING DELETE LATER
-  // logSelection() {
-  //   console.log(this.selection);
-  // }
-
   removeTeam(team) {
     this.selection.deselect(team);
     // console.log(this.selection);
     // .selected = this.selection.selected.filter((team) => team.id !== id)
+  }
+
+  removeUser(user) {
+    console.log(user);
+    this.selectionForPlayers.deselect(user);
   }
 
   ngOnDestroy() {
