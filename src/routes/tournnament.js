@@ -18,7 +18,7 @@ router.post("/register", async (req, res, next) => {
     name,
     beginDate: new Date(),
     bannerUrl,
-    status: "new",
+    status,
     numberOfPlayers
   });
 

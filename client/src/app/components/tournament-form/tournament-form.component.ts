@@ -243,7 +243,8 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
       .createTournament({
         name: this.nameOfTournament.value,
         numberOfPlayers: this.numberFormControl.value,
-        beginDate: this.beginDate.value
+        beginDate: this.beginDate.value,
+        status: this.tournamentStatusVal
       })
       .subscribe(data => console.log("RESPONSE", data));
   }
