@@ -13,6 +13,7 @@ const TournamentRegistration = require("./models/tournamentregistration");
 const judgeRoutes = require("./routes/judge");
 const teamRoutes = require("./routes/teams");
 const userRoutes = require("./routes/users");
+const tournamentRoutes = require("./routes/tournnament");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use("/judge", judgeRoutes);
 app.use("/teams", teamRoutes);
 app.use("/users", userRoutes);
+app.use("/tournament", tournamentRoutes);
 
 // DATABASE CONNECTIONS
 Team.hasMany(Match, { foreignKey: "idHomeTeam" });

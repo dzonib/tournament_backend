@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy } from "@angular/core";
 
 import {
@@ -23,9 +22,8 @@ import { Team } from "src/app/data/models/team";
 import { Util } from "src/app/data/models/util";
 import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 
-
-import * as jwt_decode from 'jwt-decode';
-
+import * as jwt_decode from "jwt-decode";
+import { TournamentService } from "src/app/data/services/tournament.service";
 
 @Component({
   selector: "app-tournament-form",
@@ -104,11 +102,15 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   //beginDate = new FormControl(new Date());
   beginDate: FormControl;
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
+  constructor(
+    private _formBuilder: FormBuilder,
+    private store: Store<State>,
+    private tournamentService: TournamentService
+  ) {
     this.numberFormControl = new FormControl("", [Validators.required]);
-    this.nameOfTournament = new FormControl('', [Validators.required]);
+    this.nameOfTournament = new FormControl("", [Validators.required]);
     this.beginDate = new FormControl(new Date(), [Validators.required]);
-   // this.beginDate = new FormControl('', [Validators.required]);
+    // this.beginDate = new FormControl('', [Validators.required]);
     this.thirdFormGroup = this._formBuilder.group({
       numberFormControl: this.numberFormControl,
       nameOfTournament: this.nameOfTournament,
@@ -122,7 +124,6 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required]
     });
@@ -141,7 +142,7 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
       this.store.dispatch(new GetAllTeams());
       this.subs.sink = this.store.select(selectAllTeams).subscribe(teams => {
         this.teams = teams;
-        this.dataSource = new MatTableDataSource(this.teams);
+        // this.dataSource = new MatTableDataSource(teams); if you want all teams to show
       });
     });
   }
@@ -220,7 +221,7 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
     this.teamsToShow = this.teams.filter(team => team.leagueName === e.value);
     this.dataSource = new MatTableDataSource<any>(this.teamsToShow);
     // this.selection = new SelectionModel<Team>(true, []);
-    console.log(this.selection.selected);
+    // console.log(this.selection.selected);
   }
 
   removeTeam(team) {
@@ -234,7 +235,24 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
     this.selectionForPlayers.deselect(user);
   }
 
+  createTournament() {
+    // console.log(this.numberFormControl.value);
+    // console.log(this.beginDate.value);
+    // console.log(this.nameOfTournament.value);
+    this.tournamentService
+      .createTournament({
+        name: this.nameOfTournament.value,
+        numberOfPlayers: this.numberFormControl.value,
+        beginDate: this.beginDate.value
+      })
+      .subscribe(data => console.log("RESPONSE", data));
+  }
+
   ngOnDestroy() {
     this.subs.unsubscribe();
   }
 }
+
+// numberOfParticipants
+// beginDate
+// nameOfTournament
