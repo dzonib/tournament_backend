@@ -56,7 +56,15 @@
       </mat-form-field>
 
       <div>
-        <button mat-raised-button disableRipple color="accent" matStepperNext>
+        <button
+          [disabled]="
+            numberFormControl.value <= 0 || nameOfTournament.value.length <= 0
+          "
+          mat-raised-button
+          disableRipple
+          color="accent"
+          matStepperNext
+        >
           Next
         </button>
       </div>
@@ -152,7 +160,9 @@
         ></tr>
       </table>
     </form>
-    <div>
+    <div
+      *ngIf="numberFormControl.value === selectionForPlayers.selected.length"
+    >
       <button mat-raised-button disableRipple color="accent" matStepperPrevious>
         Back
       </button>
@@ -259,7 +269,7 @@
         ></tr>
       </table>
     </form>
-    <div>
+    <div *ngIf="numberFormControl.value === selection.selected.length">
       <button mat-raised-button disableRipple color="accent" matStepperPrevious>
         Back
       </button>
@@ -270,6 +280,27 @@
   </mat-step>
 
   <mat-step>
+    <div
+      *ngIf="nameOfTournament.value.length > 0 && numberFormControl.value > 0"
+    >
+      <h4>Tournament name: {{ nameOfTournament.value }}</h4>
+      <h4>Number of participants: {{ numberFormControl.value }}</h4>
+      <h4>Tournament starts at : {{ beginDate.value | date }}</h4>
+      <hr />
+    </div>
+    <div *ngIf="selectionForPlayers.selected.length > 0">
+      <h4>Players participating:</h4>
+      <p *ngFor="let player of selectionForPlayers.selected; let i = index">
+        {{ i + 1 }} {{ player.name }}
+      </p>
+      <hr />
+    </div>
+    <div *ngIf="selection.selected.length > 0">
+      <h4>Teams selected:</h4>
+      <p *ngFor="let team of selection.selected; let i = index">
+        {{ i + 1 }} {{ team.name }}
+      </p>
+    </div>
     <ng-template matStepLabel>Done</ng-template>
     You are now done.
     <div>

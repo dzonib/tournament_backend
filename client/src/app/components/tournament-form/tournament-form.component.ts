@@ -236,6 +236,9 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   }
 
   createTournament() {
+    // console.log(this.selectedTeams);
+    // console.log(this.selectionForPlayers.selected.map(player => player.id));
+    // console.log(this.selection.selected.map(team => team.id));
     // console.log(this.numberFormControl.value);
     // console.log(this.beginDate.value);
     // console.log(this.nameOfTournament.value);
@@ -244,7 +247,9 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
         name: this.nameOfTournament.value,
         numberOfPlayers: this.numberFormControl.value,
         beginDate: this.beginDate.value,
-        status: this.tournamentStatusVal
+        status: this.tournamentStatusVal,
+        teams: this.selection.selected,
+        players: this.selectionForPlayers.selected
       })
       .subscribe(data => console.log("RESPONSE", data));
   }
