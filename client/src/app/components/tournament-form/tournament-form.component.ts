@@ -253,9 +253,9 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
         teams: this.selection.selected,
         players: this.selectionForPlayers.selected
       })
-      .subscribe(data => console.log("RESPONSE", data));
-
-    this.router.navigate(["/"]);
+      .subscribe(({ id }) => {
+        this.router.navigate(["/tournament/", id]);
+      });
   }
 
   ngOnDestroy() {

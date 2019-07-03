@@ -15,6 +15,23 @@ router.post("/register", async (req, res, next) => {
     players
   } = req.body;
 
+  let tournament = await Tournament.findOne({ where: { name } });
+
+  if (tournament) {
+    return res
+      .status(400)
+      .json({ msg: "Tournament with that name already exists" });
+  }
+
+  tournament = await Tournament.create({
+    name,
+    beginDate: new Date(),
+    bannerUrl,
+    status,
+    numberOfPlayers,
+    beginDate
+  });
+
   const genRandom = function(numArr) {
     let nums = numArr,
       ranNums = [],
@@ -30,12 +47,12 @@ router.post("/register", async (req, res, next) => {
   };
 
   function god(teams, players) {
-    const teamIds = genRandom(players);
+    const playersIds = genRandom(players);
     let incrementer = 0;
 
     return teams
       .reduce((accumulation, team) => {
-        accumulation = [...accumulation, [team, teamIds[incrementer]]];
+        accumulation = [...accumulation, [team, playersIds[incrementer]]];
         incrementer++;
         return accumulation;
       }, [])
@@ -45,47 +62,24 @@ router.post("/register", async (req, res, next) => {
             ? accumulation.push([value])
             : accumulation[accumulation.length - 1].push(value)) && accumulation
         );
-      }, []);
+      }, [])
+      .map(async (items, index) => {
+        match = await Match.create({
+          scoreHome: 0,
+          scoreGuest: 0,
+          drowPosition: index + 1,
+          phaseName: status,
+          deleted: false,
+          idHomeTeam: items[0][0].id,
+          idGuestTeam: items[1][0].id,
+          idTournament: tournament.id,
+          idHomeUser: items[0][1].id,
+          idGuestUser: items[1][1].id
+        });
+      });
   }
 
-  // function makeEnemies(list, elementsPerSubArray) {
-  //   var matrix = [],
-  //     i,
-  //     k;
-
-  //   for (i = 0, k = -1; i < list.length; i++) {
-  //     if (i % elementsPerSubArray === 0) {
-  //       k++;
-  //       matrix[k] = [];
-  //     }
-
-  //     matrix[k].push(list[i]);
-  //   }
-
-  //   return matrix;
-  // }
-
-  // return res.json(makeEnemies(god(teams, players), 2));
-  return res.json(god(teams, players));
-  // return res.json(god(teams, players));
-
-  // let tournament = await Tournament.findOne({ where: { name } });
-
-  // if (tournament) {
-  //   return res
-  //     .status(400)
-  //     .json({ msg: "Tournament with that name already exists" });
-  // }
-
-  tournament = await Tournament.create({
-    name,
-    beginDate: new Date(),
-    bannerUrl,
-    status,
-    numberOfPlayers
-  });
-
-  res.json(tournament);
+  return res.json({ id: tournament.id });
 });
 
 /*match = await Match.create({

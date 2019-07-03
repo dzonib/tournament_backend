@@ -10,6 +10,9 @@ export class TournamentService {
   constructor(private http: HttpClient) {}
 
   createTournament(data) {
-    return this.http.post(`${this.host}/tournament/register`, data);
+    return this.http.post<{ id: any }>(
+      `${this.host}/tournament/register`,
+      data
+    );
   }
 }
