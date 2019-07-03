@@ -17,11 +17,11 @@ router.post("/register", async (req, res, next) => {
 
   let tournament = await Tournament.findOne({ where: { name } });
 
-  if (tournament) {
-    return res
-      .status(400)
-      .json({ msg: "Tournament with that name already exists" });
-  }
+  // if (tournament) {
+  //   return res
+  //     .status(400)
+  //     .json({ msg: "Tournament with that name already exists" });
+  // }
 
   tournament = await Tournament.create({
     name,
@@ -46,7 +46,7 @@ router.post("/register", async (req, res, next) => {
     return ranNums;
   };
 
-  function god(teams, players) {
+  (function god(teams, players) {
     const playersIds = genRandom(players);
     let incrementer = 0;
 
@@ -64,6 +64,7 @@ router.post("/register", async (req, res, next) => {
         );
       }, [])
       .map(async (items, index) => {
+        console.log("ASAAA");
         match = await Match.create({
           scoreHome: 0,
           scoreGuest: 0,
@@ -77,7 +78,7 @@ router.post("/register", async (req, res, next) => {
           idGuestUser: items[1][1].id
         });
       });
-  }
+  })(teams, players);
 
   return res.json({ id: tournament.id });
 });
