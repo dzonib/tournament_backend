@@ -32,23 +32,40 @@ router.post("/register", async (req, res, next) => {
     const teamIds = genRandom(players);
     let incrementer = 0;
 
-    return teams.reduce((accumulation, team) => {
-      accumulation = [...accumulation, [team, teamIds[incrementer]]];
-      incrementer++;
-      return accumulation;
-    }, []);
+    return teams
+      .reduce((accumulation, team) => {
+        accumulation = [...accumulation, [team, teamIds[incrementer]]];
+        incrementer++;
+        return accumulation;
+      }, [])
+      .reduce((accumulation, value, index) => {
+        return (
+          (index % 2 === 0
+            ? accumulation.push([value])
+            : accumulation[accumulation.length - 1].push(value)) && accumulation
+        );
+      }, []);
   }
 
-  function pairEnemies(number, playerAndTeam) {}
+  // function makeEnemies(list, elementsPerSubArray) {
+  //   var matrix = [],
+  //     i,
+  //     k;
 
-  const randomStuff = god(teams, players);
+  //   for (i = 0, k = -1; i < list.length; i++) {
+  //     if (i % elementsPerSubArray === 0) {
+  //       k++;
+  //       matrix[k] = [];
+  //     }
 
-  const tournamentDone = [
-    [randomStuff[0], randomStuff[1]],
-    [randomStuff[2], randomStuff[3]]
-  ];
+  //     matrix[k].push(list[i]);
+  //   }
 
-  return res.json(tournamentDone);
+  //   return matrix;
+  // }
+
+  // return res.json(makeEnemies(god(teams, players), 2));
+  return res.json(god(teams, players));
   // return res.json(god(teams, players));
 
   // let tournament = await Tournament.findOne({ where: { name } });
