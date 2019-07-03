@@ -25,6 +25,8 @@ import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 import * as jwt_decode from "jwt-decode";
 import { TournamentService } from "src/app/data/services/tournament.service";
 
+import { Router } from "@angular/router";
+
 @Component({
   selector: "app-tournament-form",
   templateUrl: "./tournament-form.component.html",
@@ -105,7 +107,8 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   constructor(
     private _formBuilder: FormBuilder,
     private store: Store<State>,
-    private tournamentService: TournamentService
+    private tournamentService: TournamentService,
+    private router: Router
   ) {
     this.numberFormControl = new FormControl("", [Validators.required]);
     this.nameOfTournament = new FormControl("", [Validators.required]);
@@ -132,13 +135,12 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
     });
 
     //GET PLAYERS
-
     this.store.dispatch(new GetAllPlayers());
-
     this.subs.sink = this.store.select(selectAllPlayers).subscribe(data => {
       this.players = data;
       this.dataSourcePlayers = new MatTableDataSource<any>(this.players);
 
+      //GET TEAMS
       this.store.dispatch(new GetAllTeams());
       this.subs.sink = this.store.select(selectAllTeams).subscribe(teams => {
         this.teams = teams;
@@ -252,6 +254,8 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
         players: this.selectionForPlayers.selected
       })
       .subscribe(data => console.log("RESPONSE", data));
+
+    this.router.navigate(["/"]);
   }
 
   ngOnDestroy() {
