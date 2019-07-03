@@ -1,6 +1,7 @@
 const express = require("express");
 
 const Tournament = require("../models/tournament");
+const Match = require("../models/match");
 const router = express.Router();
 
 router.post("/register", async (req, res, next) => {
@@ -86,5 +87,18 @@ router.post("/register", async (req, res, next) => {
 
   res.json(tournament);
 });
+
+/*match = await Match.create({
+  scoreHome,
+  scoreGuest,
+  drawPosition,
+  phaseName,
+  deleted,
+  idHomeTeam,
+  idGuestTeam,
+  idTournament,
+  idHomeUser,
+  idGuestUser
+});*/
 
 module.exports = router;
