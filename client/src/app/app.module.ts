@@ -15,8 +15,9 @@ import { TokenInterceptorService } from "./data/interceptors/token-interceptor.s
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { MaterialModule } from "./material.module";
 import { HeaderComponent } from "./components/header/header.component";
-import { DataModule } from './data/stores/store.module';
-import { TournamentFormComponent } from './components/tournament-form/tournament-form.component';
+import { DataModule } from "./data/stores/store.module";
+import { TournamentFormComponent } from "./components/tournament-form/tournament-form.component";
+import { TournamentGraphComponent } from './components/tournament-graph/tournament-graph.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { TournamentFormComponent } from './components/tournament-form/tournament
     LoginComponent,
     DashboardComponent,
     HeaderComponent,
-    TournamentFormComponent
+    TournamentFormComponent,
+    TournamentGraphComponent
   ],
   imports: [
     BrowserModule,
