@@ -28,6 +28,26 @@ const Match = sequelize.define("match", {
   deleted: {
     type: Sequelize.BOOLEAN,
     defaultValue: false
+  },
+  idHomeTeam: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  idGuestTeam: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  idHomeUser: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  idGuestUser: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  idTournament: {
+    type: Sequelize.INTEGER,
+    allowNull: false
   }
 });
 

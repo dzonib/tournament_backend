@@ -255,7 +255,7 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
       })
       .subscribe(({ id }) => {
         console.log(id);
-        // this.router.navigate(["/tournament/", id]);
+        this.router.navigate(["/tournament/", id]);
       });
   }
 

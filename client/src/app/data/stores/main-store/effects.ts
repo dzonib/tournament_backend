@@ -13,11 +13,14 @@ import {
   GetAllPlayers,
   GetAllPlayersSuccess,
   GetAllTeams,
-  GetAllTeamsSuccess
+  GetAllTeamsSuccess,
+  GetAllMatches,
+  GetAllMatchesSuccess
 } from "./actions";
 import { Router } from "@angular/router";
 import { PlayersService } from "../../services/players.service";
 import { TeamsService } from "../../services/teams.service";
+import { MatchService } from "../../services/match.service";
 
 @Injectable()
 export class MainEffect {
@@ -26,7 +29,8 @@ export class MainEffect {
     private authService: AuthService,
     private router: Router,
     private playersService: PlayersService,
-    private teamService: TeamsService
+    private teamService: TeamsService,
+    private matchService: MatchService
   ) {}
 
   @Effect()
@@ -65,6 +69,20 @@ export class MainEffect {
       return this.teamService.getAllTeams().pipe(
         map((teams: any) => {
           return new GetAllTeamsSuccess(teams);
+        })
+      );
+    })
+  );
+
+  @Effect()
+  loadMatchesWithSpecificTournament$: Observable<Action> = this.action$.pipe(
+    ofType<GetAllMatches>(ActionTypes.GET_ALL_MATCHES),
+    switchMap(data => {
+      console.log("ID FROM EFFECTS YOYOYOOYOYOY", data.payload);
+      return this.matchService.getAllMatches(data.payload).pipe(
+        map((matches: any) => {
+          console.log("ADSADGHGG#G$#$#@$#@$##$#@", matches);
+          return new GetAllMatchesSuccess(matches);
         })
       );
     })
