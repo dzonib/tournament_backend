@@ -26,13 +26,17 @@ export class AuthGuard implements CanActivate {
         this.store.dispatch(new SetUser(user));
 
         if (user.category === "judge") {
+          this.executed = true;
           return true;
         }
+
         this.executed = true;
         return false;
       } else {
+        this.executed = true;
         return false;
       }
     }
+    return true;
   }
 }
