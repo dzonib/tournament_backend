@@ -150,7 +150,6 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   }
 
   numberOfPlayersSelectionChange(event) {
-    console.log(event.value);
     this.numberOfParticipantsVal = event.value;
     if (this.numberOfParticipantsVal === 2) {
       this.tournamentStatusVal = "finale";

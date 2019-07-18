@@ -31,9 +31,12 @@ app.use("/matches", matchRoutes);
 // DATABASE CONNECTIONS
 Team.hasMany(Match, { foreignKey: "idHomeTeam" });
 Team.hasMany(Match, { foreignKey: "idGuestTeam" });
+// NEED TO ASSING THEM OTHER WAY AROUND AS WELL SO YOU CAN USE THEM IN ASSOCIATIONS
+Match.belongsTo(Team, { as: "homeTeam", foreignKey: "idHomeTeam" });
+Match.belongsTo(Team, { as: "guestTeam", foreignKey: "idGuestTeam" });
 Tournament.hasMany(Match, { foreignKey: "idTournament" });
-Match.belongsTo(User, { foreignKey: "idHomeUser" });
-Match.belongsTo(User, { foreignKey: "idGuestUser" });
+Match.belongsTo(User, { as: "homeUser", foreignKey: "idHomeUser" });
+Match.belongsTo(User, { as: "guestUser", foreignKey: "idGuestUser" });
 TournamentRegistration.belongsTo(User, { foreignKey: "idUser" });
 Tournament.hasMany(TournamentRegistration, { foreignKey: "idTournament" });
 

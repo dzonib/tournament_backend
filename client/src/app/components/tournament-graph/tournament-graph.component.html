@@ -1,42 +1,117 @@
-<form [formGroup]="tournamentGraphGroup">
-  <h3 style="text-align: center">UCITELJU PREJAKI SMO</h3>
-  <ng-template matStepLabel>Matches</ng-template>
-  <br />
-  <table mat-table
-         [dataSource]="dataSourceMatches"
-         class="mat-elevation-z8">
-    <!-- Score Home Column -->
-    <ng-container matColumnDef="scoreHome">
-      <th mat-header-cell
-          *matHeaderCellDef>Score Home</th>
-      <td mat-cell
-          *matCellDef="let element">{{ element.scoreHome }}</td>
+<h1>PES TOURNAMENT 2056</h1>
+<main id="tournament">
+  <ul class="round round-1">
+    <ng-container *ngFor="let match of matches"
+                  class="match-container">
+      <li class="spacer">&nbsp;</li>
+      <button mat-button
+              mat-raised-button
+              color="accent"
+              class="finish-btn"
+              [disabled]="match.scoreGuest === match.scoreHome"
+              (click)="finishMatchHandler(match)">Finish Match</button>
+      <li class="game game-top">{{match.homeUser.name}} - {{match.homeTeam.name}} <span class="input-container">
+          <mat-icon class="icon"
+                    title="Add 1 to score"
+                    (click)="resultIncrementHandler(match, 'home')">add</mat-icon>
+          <input type="text"
+                 [value]="match.scoreHome"
+                 class="score">
+          <mat-icon class="icon"
+                    title="Subtract 1 from score"
+                    (click)="resultSubtracthandler(match, 'home')">remove</mat-icon>
+        </span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom"> {{match.guestUser.name}} - {{match.guestTeam.name}} <span class="input-container">
+          <mat-icon class="icon"
+                    title="Add 1 to score"
+                    (click)="resultIncrementHandler(match, 'guest')">add</mat-icon> <input type="text"
+                 [value]="match.scoreGuest"
+                 class="score">
+          <mat-icon class="icon"
+                    title="Subtract 1 from score"
+                    (click)="resultSubtracthandler(match, 'guest')">remove</mat-icon>
+        </span></li>
     </ng-container>
-    <!-- Socore Guest Column -->
-    <ng-container matColumnDef="scoreGuest">
-      <th mat-header-cell
-          *matHeaderCellDef>Score Guest</th>
-      <td mat-cell
-          *matCellDef="let element">{{ element.scoreGuest }}</td>
-    </ng-container>
-    <!-- Drow Position Column -->
-    <ng-container matColumnDef="drowPosition">
-      <th mat-header-cell
-          *matHeaderCellDef>Drow Position</th>
-      <td mat-cell
-          *matCellDef="let element">{{ element.drowPosition }}</td>
-    </ng-container>
-    <!-- Phase Name Column -->
-    <ng-container matColumnDef="phaseName">
-      <th mat-header-cell
-          *matHeaderCellDef>Phase Name</th>
-      <td mat-cell
-          *matCellDef="let element">{{ element.phaseName }}</td>
-    </ng-container>
-    <tr mat-header-row
-        *matHeaderRowDef="displayedColumnsForPlayers"></tr>
-    <tr mat-row
-        *matRowDef="let row; columns: displayedColumnsForPlayers"
-        (click)="selectionForMatches.toggle(row)"></tr>
-  </table>
-</form>
+  </ul>
+  <ng-container>
+    <ul class="round round-2">
+      <li class="spacer">&nbsp;</li>
+      <button mat-button
+              mat-raised-button
+              color="accent"
+              class="finish-btn"
+              (click)="finishMatchHandler()">Finish Match</button>
+      <li class="game game-top winner">Lousville <span>82</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">Colo St <span>56</span></li>
+      <li class="spacer mid-spacer">&nbsp;</li>
+      <li class="game game-top winner">Oregon <span>74</span></li>
+      <li class="game game-spacer bot-spacer">&nbsp;</li>
+      <li class="game game-bottom second">Saint Louis <span>57</span></li>
+    </ul>
+  </ng-container>
+  <!-- <li class="
+               spacer">&nbsp;</li>
+      <li class="game game-top winner">Lousville <span>79</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">NC A&T <span>48</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Colo St <span>84</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">Missouri <span>72</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top ">Oklahoma St <span>55</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom winner">Oregon <span>68</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Saint Louis <span>64</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">New Mexico St <span>44</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Memphis <span>54</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">St Mary's <span>52</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Mich St <span>65</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">Valparaiso <span>54</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Creighton <span>67</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">Cincinnati <span>63</span></li>
+      <li class="spacer">&nbsp;</li>
+      <li class="game game-top winner">Duke <span>73</span></li>
+      <li class="game game-spacer">&nbsp;</li>
+      <li class="game game-bottom ">Albany <span>61</span></li>
+      <li class="spacer">&nbsp;</li> -->
+  <!-- <ul class="round round-2">
+    <li class="spacer">&nbsp;</li>
+    <li class="game game-top winner">Lousville <span>82</span></li>
+    <li class="game game-spacer">&nbsp;</li>
+    <li class="game game-bottom ">Colo St <span>56</span></li>
+    <li class="spacer mid-spacer">&nbsp;</li>
+    <li class="game game-top winner">Oregon <span>74</span></li>
+    <li class="game game-spacer bot-spacer">&nbsp;</li>
+    <li class="game game-bottom second">Saint Louis <span>57</span></li>
+  </ul> -->
+  <!-- <ul class="round round-3">
+    <li class="spacer">&nbsp;</li>
+    <li class="game game-top winner">Lousville <span>77</span></li>
+    <li class="game game-spacer">&nbsp;</li>
+    <li class="game game-bottom ">Oregon <span>69</span></li>
+    <li class="spacer">&nbsp;</li>
+    <li class="game game-top ">Mich St <span>61</span></li>
+    <li class="game game-spacer">&nbsp;</li>
+    <li class="game game-bottom winner">Duke <span>71</span></li>
+    <li class="spacer">&nbsp;</li>
+  </ul>
+  -->
+  <ul class="round round-4">
+    <li class="spacer">&nbsp;</li>
+    <li class="game game-top winner">Lousville <span>85</span></li>
+    <li class="game game-spacer">&nbsp;</li>
+    <li class="game game-bottom ">Duke <span>63</span></li>
+    <li class="spacer">&nbsp;</li>
+  </ul>
+</main>

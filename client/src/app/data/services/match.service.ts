@@ -10,7 +10,18 @@ export class MatchService {
   constructor(private http: HttpClient) {}
 
   getAllMatches(id): Observable<Match[]> {
-    console.log("ID FROM SERVICE" + id);
     return this.http.get<Match[]>(`http://localhost:5000/matches/${id}`);
+  }
+
+  updateMatchScore(
+    tournamentId,
+    matchId,
+    scoreHome,
+    scoreGuest
+  ): Observable<Match[]> {
+    return this.http.put<Match[]>(
+      `http://localhost:5000/matches/${tournamentId}/${matchId}`,
+      { scoreHome, scoreGuest }
+    );
   }
 }

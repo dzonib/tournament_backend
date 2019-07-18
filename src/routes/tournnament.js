@@ -4,6 +4,8 @@ const Tournament = require("../models/tournament");
 const Match = require("../models/match");
 const router = express.Router();
 
+const getPhaseNameByPlayersNumber = require("../util/getPhaseNameByPlayersNumber");
+
 router.post("/register", async (req, res, next) => {
   const {
     name,
@@ -64,7 +66,6 @@ router.post("/register", async (req, res, next) => {
         );
       }, [])
       .map(async (items, index) => {
-        console.log("ASAAA");
         match = await Match.create({
           scoreHome: 0,
           scoreGuest: 0,
@@ -81,6 +82,24 @@ router.post("/register", async (req, res, next) => {
   })(teams, players);
 
   return res.json({ id: tournament.id });
+});
+
+router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
+  try {
+    const { tournamentId, matchId } = req.params;
+    const tournament = await Tournament.findByPk(tournamentId);
+
+    console.log(getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1));
+    // tournament.p
+    const updatedTournament = await tournament.update({
+      numberOfPlayers: tournament.numberOfPlayers - 1,
+      status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
+    });
+
+    res.json(updatedTournament);
+  } catch (e) {
+    console.log(e.message);
+  }
 });
 
 /*match = await Match.create({

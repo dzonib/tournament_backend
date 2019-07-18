@@ -78,10 +78,8 @@ export class MainEffect {
   loadMatchesWithSpecificTournament$: Observable<Action> = this.action$.pipe(
     ofType<GetAllMatches>(ActionTypes.GET_ALL_MATCHES),
     switchMap(data => {
-      console.log("ID FROM EFFECTS YOYOYOOYOYOY", data.payload);
       return this.matchService.getAllMatches(data.payload).pipe(
         map((matches: any) => {
-          console.log("ADSADGHGG#G$#$#@$#@$##$#@", matches);
           return new GetAllMatchesSuccess(matches);
         })
       );
