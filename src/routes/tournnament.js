@@ -2,6 +2,8 @@ const express = require("express");
 
 const Tournament = require("../models/tournament");
 const Match = require("../models/match");
+const User = require("../models/user");
+const Team = require("../models/team");
 const router = express.Router();
 
 const getPhaseNameByPlayersNumber = require("../util/getPhaseNameByPlayersNumber");
@@ -89,14 +91,27 @@ router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
     const { tournamentId, matchId } = req.params;
     const tournament = await Tournament.findByPk(tournamentId);
 
-    console.log(getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1));
-    // tournament.p
     const updatedTournament = await tournament.update({
       numberOfPlayers: tournament.numberOfPlayers - 1,
       status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
     });
 
-    res.json(updatedTournament);
+    // handle match
+    // include winnder update loser to deleated
+
+    const match = await Match.findAll({
+      where: { id: matchId },
+      include: [
+        { attributes: ["name"], model: User, as: "homeUser" },
+        { attributes: ["name"], model: User, as: "guestUser" },
+        { attributes: ["name"], model: Team, as: "homeTeam" },
+        { attributes: ["name"], model: Team, as: "guestTeam" }
+      ]
+    });
+    // add the names of winners in second array in angular and pull them in one by one
+    res.json(match);
+
+    // res.json(updatedTournament);
   } catch (e) {
     console.log(e.message);
   }
