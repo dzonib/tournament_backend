@@ -29,6 +29,7 @@ import {
   delay,
   throttleTime
 } from "rxjs/operators";
+import { TournamentService } from "src/app/data/services/tournament.service";
 
 @Component({
   selector: "app-tournament-graph",
@@ -57,7 +58,8 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
   constructor(
     private store: Store<State>,
     private route: ActivatedRoute,
-    private matchService: MatchService // private _formBuilder: FormBuilder
+    private matchService: MatchService, // private _formBuilder: FormBuilder
+    private tournamentService: TournamentService
   ) {
     // this.tournamentGraphGroup = this._formBuilder.group({});
   }
@@ -72,7 +74,6 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       this.matches = data;
       // this.dataSourceMatches = new MatTableDataSource<any>(this.matches);
     });
-
     //
   }
 
@@ -188,6 +189,9 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     // }
     // const winner = match.filter()
     // console.log(this.matches2);
+    this.subs.sink = this.tournamentService
+      .finishMatch(match)
+      .subscribe(data => console.log(data));
   }
 
   saveScore(idTournament, id, scoreHome, scoreGuest) {
@@ -198,7 +202,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       scoreGuest
     );
 
-    this.subs.sink = yo$.subscribe(data => console.log(data));
+    this.subs.sink = yo$.subscribe(data => data);
   }
 
   ngOnDestroy() {

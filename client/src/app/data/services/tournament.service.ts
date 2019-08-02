@@ -17,7 +17,10 @@ export class TournamentService {
     );
   }
 
-  // finishMatch(winner: Match, loser: Match) {
-  //   return this.http.put(`${this.host}/tournament`)
-  // }
+  finishMatch(match: Match) {
+    return this.http.put(
+      `${this.host}/tournament/next-round/${match.idTournament}/${match.id}`,
+      match
+    );
+  }
 }

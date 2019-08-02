@@ -72,7 +72,7 @@ router.post("/register", async (req, res, next) => {
           scoreHome: 0,
           scoreGuest: 0,
           drowPosition: index + 1,
-          phaseName: status,
+          phaseName: "1",
           deleted: false,
           idHomeTeam: items[0][0].id,
           idGuestTeam: items[1][0].id,
@@ -91,9 +91,11 @@ router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
     const { tournamentId, matchId } = req.params;
     const tournament = await Tournament.findByPk(tournamentId);
 
+    const newStatus = Number(tournament.status) + 1;
     const updatedTournament = await tournament.update({
       numberOfPlayers: tournament.numberOfPlayers - 1,
-      status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
+      // status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
+      status: String(newStatus)
     });
 
     // handle match
