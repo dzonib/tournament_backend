@@ -72,7 +72,9 @@ router.post("/register", async (req, res, next) => {
           scoreHome: 0,
           scoreGuest: 0,
           drowPosition: index + 1,
-          phaseName: "1",
+          phaseName: getPhaseNameByPlayersNumber(
+            tournament.numberOfPlayers - 1
+          ),
           deleted: false,
           idHomeTeam: items[0][0].id,
           idGuestTeam: items[1][0].id,
@@ -80,6 +82,8 @@ router.post("/register", async (req, res, next) => {
           idHomeUser: items[0][1].id,
           idGuestUser: items[1][1].id
         });
+
+        console.log(JSON.stringify(match));
       });
   })(teams, players);
 
@@ -91,11 +95,11 @@ router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
     const { tournamentId, matchId } = req.params;
     const tournament = await Tournament.findByPk(tournamentId);
 
-    const newStatus = Number(tournament.status) + 1;
+    // const newStatus = Number(tournament.status) + 1;
     const updatedTournament = await tournament.update({
       numberOfPlayers: tournament.numberOfPlayers - 1,
-      // status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
-      status: String(newStatus)
+      status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
+      // status: String(newStatus)
     });
 
     // handle match

@@ -1,4 +1,5 @@
 module.exports = function getPhaseNameByPlayersNumber(playersNumber) {
+  console.log(playersNumber);
   if (playersNumber === 2) {
     return "finale";
   } else if (playersNumber <= 4) {
