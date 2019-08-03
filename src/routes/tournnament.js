@@ -50,6 +50,7 @@ router.post("/register", async (req, res, next) => {
     return ranNums;
   };
 
+  // TOURNAMENT DRAW**************************************
   (function god(teams, players) {
     const playersIds = genRandom(players);
     let incrementer = 0;
@@ -90,16 +91,26 @@ router.post("/register", async (req, res, next) => {
   return res.json({ id: tournament.id });
 });
 
+//*************************
 router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
   try {
+    console.log("Finish ------------ GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     const { tournamentId, matchId } = req.params;
+
+    console.log(req.params);
     const tournament = await Tournament.findByPk(tournamentId);
+    const currentMatch = await Match.findByPk(matchId); //ADDED
 
     // const newStatus = Number(tournament.status) + 1;
     const updatedTournament = await tournament.update({
       numberOfPlayers: tournament.numberOfPlayers - 1,
       status: getPhaseNameByPlayersNumber(tournament.numberOfPlayers - 1)
       // status: String(newStatus)
+    });
+
+    //ADDED
+    const updatedMatch = await currentMatch.update({
+      deleted: true
     });
 
     // handle match
@@ -122,18 +133,5 @@ router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
     console.log(e.message);
   }
 });
-
-/*match = await Match.create({
-  scoreHome,
-  scoreGuest,
-  drawPosition,
-  phaseName,
-  deleted,
-  idHomeTeam,
-  idGuestTeam,
-  idTournament,
-  idHomeUser,
-  idGuestUser
-});*/
 
 module.exports = router;

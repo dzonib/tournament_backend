@@ -19,7 +19,7 @@ import { State } from "../../data/stores/main-store/state";
 import { selectAllPlayers } from "../../data/stores/main-store/selectors";
 
 import { Team } from "src/app/data/models/team";
-import { Util } from "src/app/data/models/util";
+import { Util, PHASE } from "src/app/data/models/util";
 import { selectAllTeams } from "src/app/data/stores/main-store/selectors";
 
 import * as jwt_decode from "jwt-decode";
@@ -152,19 +152,19 @@ export class TournamentFormComponent implements OnInit, OnDestroy {
   numberOfPlayersSelectionChange(event) {
     this.numberOfParticipantsVal = event.value;
     if (this.numberOfParticipantsVal === 2) {
-      this.tournamentStatusVal = "finale";
+      this.tournamentStatusVal = PHASE.FINALE;
       console.log(this.tournamentStatusVal);
     } else if (this.numberOfParticipantsVal === 4) {
-      this.tournamentStatusVal = "semi-finals";
+      this.tournamentStatusVal = PHASE.SEMI_FINALS;
       console.log(this.tournamentStatusVal);
     } else if (this.numberOfParticipantsVal === 8) {
-      this.tournamentStatusVal = "quarter-finals";
+      this.tournamentStatusVal = PHASE.QUARTER_FINALS;
       console.log(this.tournamentStatusVal);
     } else if (this.numberOfParticipantsVal === 16) {
-      this.tournamentStatusVal = "8th-finals";
+      this.tournamentStatusVal = PHASE.EIGHTH_FINALS;
       console.log(this.tournamentStatusVal);
     } else if (this.numberOfParticipantsVal === 32) {
-      this.tournamentStatusVal = "16th-finals";
+      this.tournamentStatusVal = PHASE.SIXTEENTH_FINALS;
       console.log(this.tournamentStatusVal);
     }
   }

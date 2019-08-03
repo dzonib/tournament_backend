@@ -50,4 +50,35 @@ router.put("/:idTournament/:matchId", async (req, res) => {
   }
 });
 
+router.post("/create", async (req, res, next) => {
+  console.log("-------------------------CREATE MATCH---------------");
+  const {
+    scoreHome,
+    scoreGuest,
+    drowPosition,
+    phaseName,
+    deleted,
+    idHomeTeam,
+    idGuestTeam,
+    idTournament,
+    idHomeUser,
+    idGuestUser
+  } = req.body;
+
+  let match = await Match.create({
+    scoreHome: 0,
+    scoreGuest: 0,
+    drowPosition,
+    phaseName,
+    deleted: false,
+    idHomeTeam,
+    idGuestTeam,
+    idTournament,
+    idHomeUser,
+    idGuestUser
+  });
+
+  return res.json({ id: match.id });
+});
+
 module.exports = router;

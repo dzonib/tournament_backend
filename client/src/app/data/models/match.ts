@@ -11,6 +11,7 @@ export interface Match {
   idTournament: number;
   idHomeUser?: number;
   idGuestUser?: number;
+  deleted?: boolean;
   homeUser?: {
     name: string;
   };

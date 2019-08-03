@@ -7,6 +7,8 @@ import { Observable } from "rxjs";
   providedIn: "root"
 })
 export class MatchService {
+  host = "http://localhost:5000";
+
   constructor(private http: HttpClient) {}
 
   getAllMatches(id): Observable<Match[]> {
@@ -23,5 +25,9 @@ export class MatchService {
       `http://localhost:5000/matches/${tournamentId}/${matchId}`,
       { scoreHome, scoreGuest }
     );
+  }
+
+  createMatch(data) {
+    return this.http.post<{ id: any }>(`${this.host}/matches/create`, data);
   }
 }
