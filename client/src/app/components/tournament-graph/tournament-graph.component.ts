@@ -97,18 +97,29 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       //this.dataSourceMatches = new MatTableDataSource<any>(this.matches);
 
       // NEW *******************
-      //console.log("Number of matches: " + this.matches.length);
+      console.log("Number of matches before if: " + this.matches.length);
       if (this.matches[0]) {
         // console.log(this.matches[0]);
+        // console.log(this.matches[0]);
         let phaseCounter = 0;
-        let phaseMatch = this.matches[0].phaseName;
+        let phasesOfTournament: Set<string> = new Set();
+        this.matches.forEach(match => {
+          phasesOfTournament.add(match.phaseName);
+        });
+        // console.log("Number of phases: " + phasesOfTournament.size);
+        //let phaseMatch = this.matches[0].phaseName;
         //console.log("Phase matches: " + phaseMatch);
         let isFinded = false;
         for (let i = this.phases.length; i >= 0; i--) {
-          if (phaseMatch === this.phases[i]) {
-            isFinded = true;
-            //this.displayedGraphColumns.push(this.phases[i]);
+          if (!isFinded) {
+            for (let entry of phasesOfTournament) {
+              // console.log(entry);
+              if (entry === this.phases[i]) {
+                isFinded = true;
+              }
+            }
           }
+          //this.displayedGraphColumns.push(this.phases[i]);
           if (isFinded) {
             phaseCounter++;
             this.displayedGraphColumns.push(this.phases[i]);
@@ -128,10 +139,11 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
           }
           let tournamentPhase: TournamentPhase = new TournamentPhase();
           tournamentPhase.name = this.phases[i];
-          console.log("Name phase:" + tournamentPhase.name);
+          // console.log("Name phase:" + tournamentPhase.name);
           tournamentPhase.matches = matchesArray.sort(
             (a, b) => a.drowPosition - b.drowPosition
           );
+          console.log("Number of matches:" + tournamentPhase.matches.length);
           //console.log("Matches length before:" + matchesArray.length);
           tournamentGraphLocal.tournamentPhases.push(tournamentPhase);
           matchesArray = [];
@@ -242,7 +254,9 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     this.subs.sink = this.tournamentService
       .finishMatch(matchForFinish)
       .subscribe(data => {
-        matchForFinish.deleted = data["deleted"];
+        console.log("FINISH MATCH");
+        console.log(data);
+        // matchForFinish.deleted = data["deleted"];
       });
 
     let currentPhase = matchForFinish.phaseName;
@@ -252,20 +266,32 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
 
     for (let i = 0; i < this.tournamentGraph[0].tournamentPhases.length; i++) {
       if (this.tournamentGraph[0].tournamentPhases[i].name === currentPhase) {
-        localTournamentPhase = this.tournamentGraph[0].tournamentPhases[i];
         currentPhasePosition = i;
-        console.log("Phase position: " + currentPhasePosition);
+        this.tournamentGraph[0].tournamentPhases[i].matches.forEach(match => {
+          if (matchForFinish.id === match.id) {
+            match.deleted = true;
+          }
+        });
         break;
       }
     }
     let allMatchesCompleted = true;
-    localTournamentPhase.matches.forEach(match => {
+    localTournamentPhase = this.tournamentGraph[0].tournamentPhases[
+      currentPhasePosition
+    ];
+    this.tournamentGraph[0].tournamentPhases[
+      currentPhasePosition
+    ].matches.forEach(match => {
       if (!match.deleted) {
         allMatchesCompleted = false;
       }
     });
-
-    if (allMatchesCompleted) {
+    console.log("All completed: " + allMatchesCompleted);
+    if (
+      allMatchesCompleted &&
+      "finale" !==
+        this.tournamentGraph[0].tournamentPhases[currentPhasePosition].name
+    ) {
       let drawPosition = 1;
       let idHomeTeam;
       let idGuestTeam;
@@ -275,6 +301,10 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
         (a, b) => a.drowPosition - b.drowPosition
       );
       for (let i = 0; i < localTournamentPhase.matches.length; ) {
+        console.log("i: " + i);
+        console.log(
+          "Length matches in local: " + localTournamentPhase.matches.length
+        );
         if (
           //setting the match host in the next phase
           localTournamentPhase.matches[i].scoreHome >
@@ -297,7 +327,6 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
           idGuestTeam = localTournamentPhase.matches[i + 1].idGuestTeam;
           idGuestUser = localTournamentPhase.matches[i + 1].idGuestUser;
         }
-        i += 2; //taking matches in pairs
         currentPhasePosition++;
         console.log(
           this.tournamentGraph[0].tournamentPhases[0].name +
@@ -320,9 +349,23 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
           idHomeUser: idHomeUser,
           idGuestUser: idGuestUser
         };
-        console.log(json);
-        this.matchService.createMatch(json);
+
+        this.matchService.createMatch(json).subscribe(data => {
+          console.log(data);
+          this.matchService
+            .getMatch(data.idTournament, data.id)
+            .subscribe(data => {
+              console.log(data);
+              this.tournamentGraph[0].tournamentPhases[
+                currentPhasePosition
+              ].matches.push(data);
+              this.dataSourceMatches = new MatTableDataSource<TournamentGraph>(
+                this.tournamentGraph
+              );
+            });
+        });
         drawPosition++;
+        i += 2; //taking matches in pairs
       }
     }
 

@@ -52,33 +52,61 @@ router.put("/:idTournament/:matchId", async (req, res) => {
 
 router.post("/create", async (req, res, next) => {
   console.log("-------------------------CREATE MATCH---------------");
-  const {
-    scoreHome,
-    scoreGuest,
-    drowPosition,
-    phaseName,
-    deleted,
-    idHomeTeam,
-    idGuestTeam,
-    idTournament,
-    idHomeUser,
-    idGuestUser
-  } = req.body;
+  try {
+    const {
+      scoreHome,
+      scoreGuest,
+      drowPosition,
+      phaseName,
+      deleted,
+      idHomeTeam,
+      idGuestTeam,
+      idTournament,
+      idHomeUser,
+      idGuestUser
+    } = req.body;
 
-  let match = await Match.create({
-    scoreHome: 0,
-    scoreGuest: 0,
-    drowPosition,
-    phaseName,
-    deleted: false,
-    idHomeTeam,
-    idGuestTeam,
-    idTournament,
-    idHomeUser,
-    idGuestUser
-  });
+    let match = await Match.create({
+      scoreHome: 0,
+      scoreGuest: 0,
+      drowPosition,
+      phaseName,
+      deleted: false,
+      idHomeTeam,
+      idGuestTeam,
+      idTournament,
+      idHomeUser,
+      idGuestUser
+    });
 
-  return res.json({ id: match.id });
+    return res.json(match);
+  } catch (e) {
+    console.log(e.message);
+  }
+});
+
+router.get("/:idTournament/:idMatch", async (req, res, next) => {
+  try {
+    const idTournament = req.params.idTournament;
+    const idMatch = req.params.idMatch;
+
+    const match = await Match.findOne({
+      where: {
+        idTournament,
+        id: idMatch
+      },
+      include: [
+        { attributes: ["name"], model: User, as: "homeUser" },
+        { attributes: ["name"], model: User, as: "guestUser" },
+        { attributes: ["name"], model: Team, as: "homeTeam" },
+        { attributes: ["name"], model: Team, as: "guestTeam" }
+      ]
+    });
+
+    res.json(match);
+  } catch (e) {
+    console.log(e.message);
+  }
 });
 
 module.exports = router;

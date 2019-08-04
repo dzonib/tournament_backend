@@ -15,6 +15,12 @@ export class MatchService {
     return this.http.get<Match[]>(`http://localhost:5000/matches/${id}`);
   }
 
+  getMatch(idTournament, idMatch): Observable<Match> {
+    return this.http.get<Match>(
+      `http://localhost:5000/matches/${idTournament}/${idMatch}`
+    );
+  }
+
   updateMatchScore(
     tournamentId,
     matchId,
@@ -28,6 +34,7 @@ export class MatchService {
   }
 
   createMatch(data) {
-    return this.http.post<{ id: any }>(`${this.host}/matches/create`, data);
+    console.log(data);
+    return this.http.post<Match>("http://localhost:5000/matches/create", data);
   }
 }
