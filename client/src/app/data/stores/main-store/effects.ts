@@ -21,6 +21,9 @@ import { Router } from "@angular/router";
 import { PlayersService } from "../../services/players.service";
 import { TeamsService } from "../../services/teams.service";
 import { MatchService } from "../../services/match.service";
+import { Match } from "../../models/match";
+import { Team } from "../../models/team";
+import { User } from "../../models/user";
 
 @Injectable()
 export class MainEffect {
@@ -55,7 +58,7 @@ export class MainEffect {
     ofType<GetAllPlayers>(ActionTypes.GET_ALL_PLAYERS),
     switchMap(() => {
       return this.playersService.getAllPlayers().pipe(
-        map((players: any) => {
+        map((players: User[]) => {
           return new GetAllPlayersSuccess(players);
         })
       );
@@ -67,7 +70,7 @@ export class MainEffect {
     ofType<GetAllTeams>(ActionTypes.GET_ALL_TEAMS),
     switchMap(() => {
       return this.teamService.getAllTeams().pipe(
-        map((teams: any) => {
+        map((teams: Team[]) => {
           return new GetAllTeamsSuccess(teams);
         })
       );
@@ -79,7 +82,7 @@ export class MainEffect {
     ofType<GetAllMatches>(ActionTypes.GET_ALL_MATCHES),
     switchMap(data => {
       return this.matchService.getAllMatches(data.payload).pipe(
-        map((matches: any) => {
+        map((matches: Match[]) => {
           return new GetAllMatchesSuccess(matches);
         })
       );

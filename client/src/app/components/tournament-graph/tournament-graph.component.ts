@@ -45,7 +45,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
   disableFinishMatchBtn = true;
   public tournamentInProgress = [];
   private subs = new SubSink();
-  tournamentId: number = 0;
+  tournamentId: number;
   matches: Match[] = [];
   matches2: Match[] = [];
 
@@ -64,18 +64,13 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
 
   // ***********************
 
-  // displayedColumnsForPlayers: string[] = [
-  //   "scoreHome",
-  //   "scoreGuest",
-  //   "drowPosition",
-  //   "phaseName"
-  // ];
-
   // tournamentGraphGroup: FormGroup;
   dataSourceMatches = new MatTableDataSource<TournamentGraph>(
     this.tournamentGraph
   );
   // selectionForMatches = new SelectionModel<any>(true, []);
+
+  phasesOfTournament: Set<string> = new Set();
 
   constructor(
     private store: Store<State>,
@@ -94,17 +89,18 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     this.store.dispatch(new GetAllMatches(this.tournamentId));
     this.subs.sink = this.store.select(selectAllMatches).subscribe(data => {
       this.matches = data;
+
+      this.matches.forEach(x => console.log(x));
+      console.log("Number of matches before if: " + this.matches.length);
       //this.dataSourceMatches = new MatTableDataSource<any>(this.matches);
 
-      // NEW *******************
-      console.log("Number of matches before if: " + this.matches.length);
+      // NEW **************
       if (this.matches[0]) {
-        // console.log(this.matches[0]);
-        // console.log(this.matches[0]);
+        //if there is no match it does not draw a graph
         let phaseCounter = 0;
-        let phasesOfTournament: Set<string> = new Set();
+
         this.matches.forEach(match => {
-          phasesOfTournament.add(match.phaseName);
+          this.phasesOfTournament.add(match.phaseName);
         });
         // console.log("Number of phases: " + phasesOfTournament.size);
         //let phaseMatch = this.matches[0].phaseName;
@@ -112,7 +108,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
         let isFinded = false;
         for (let i = this.phases.length; i >= 0; i--) {
           if (!isFinded) {
-            for (let entry of phasesOfTournament) {
+            for (let entry of this.phasesOfTournament) {
               // console.log(entry);
               if (entry === this.phases[i]) {
                 isFinded = true;
@@ -130,6 +126,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
         let matchesArray: Match[] = [];
         let tournamentGraphLocal: TournamentGraph = new TournamentGraph();
         tournamentGraphLocal.tournamentPhases = [];
+
         for (let i = phaseCounter - 1; i >= 0; i--) {
           for (let j = 0; j < this.matches.length; j++) {
             if (this.matches[j].phaseName === this.phases[i]) {
@@ -154,9 +151,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
           this.tournamentGraph
         );
       }
-      // this.dataSourceMatches = new MatTableDataSource<any>(this.matches);
     });
-    //
   }
 
   resultIncrementHandler(
