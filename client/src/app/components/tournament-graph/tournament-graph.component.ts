@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, Inject } from "@angular/core";
 import { Store } from "@ngrx/store";
 import {
   GetAllMatches,
@@ -35,6 +35,11 @@ import {
   TournamentPhase,
   TournamentGraph
 } from "src/app/data/models/tournament";
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA
+} from "@angular/material/dialog";
 
 @Component({
   selector: "app-tournament-graph",
@@ -77,7 +82,8 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private matchService: MatchService, // private _formBuilder: FormBuilder
     private tournamentService: TournamentService
-  ) {
+  ) // public dialog: MatDialog
+  {
     // this.tournamentGraphGroup = this._formBuilder.group({});
   }
 
@@ -90,7 +96,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     this.subs.sink = this.store.select(selectAllMatches).subscribe(data => {
       this.matches = data;
 
-      this.matches.forEach(x => console.log(x));
+      //this.matches.forEach(x => console.log(x));
       console.log("Number of matches before if: " + this.matches.length);
       //this.dataSourceMatches = new MatTableDataSource<any>(this.matches);
 
@@ -262,6 +268,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.tournamentGraph[0].tournamentPhases.length; i++) {
       if (this.tournamentGraph[0].tournamentPhases[i].name === currentPhase) {
         currentPhasePosition = i;
+        console.log("CURRENT PHASE POSITION OOOO: " + currentPhasePosition);
         this.tournamentGraph[0].tournamentPhases[i].matches.forEach(match => {
           if (matchForFinish.id === match.id) {
             match.deleted = true;
@@ -282,6 +289,10 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       }
     });
     console.log("All completed: " + allMatchesCompleted);
+    console.log(
+      "All completed phase: " +
+        this.tournamentGraph[0].tournamentPhases[currentPhasePosition].name
+    );
     if (
       allMatchesCompleted &&
       "finale" !==
@@ -296,10 +307,6 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
         (a, b) => a.drowPosition - b.drowPosition
       );
       for (let i = 0; i < localTournamentPhase.matches.length; ) {
-        console.log("i: " + i);
-        console.log(
-          "Length matches in local: " + localTournamentPhase.matches.length
-        );
         if (
           //setting the match host in the next phase
           localTournamentPhase.matches[i].scoreHome >
@@ -322,20 +329,21 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
           idGuestTeam = localTournamentPhase.matches[i + 1].idGuestTeam;
           idGuestUser = localTournamentPhase.matches[i + 1].idGuestUser;
         }
-        currentPhasePosition++;
+        //currentPhasePosition++;
         console.log(
           this.tournamentGraph[0].tournamentPhases[0].name +
             "----" +
             this.tournamentGraph[0].tournamentPhases[1].name +
             "-----" +
-            currentPhasePosition
+            currentPhasePosition +
+            1
         );
         let json = {
           scoreHome: 0,
           scoreGuest: 0,
           drowPosition: drawPosition,
           phaseName: this.tournamentGraph[0].tournamentPhases[
-            currentPhasePosition
+            currentPhasePosition + 1
           ].name,
           deleted: false,
           idHomeTeam: idHomeTeam,
@@ -352,7 +360,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
             .subscribe(data => {
               console.log(data);
               this.tournamentGraph[0].tournamentPhases[
-                currentPhasePosition
+                currentPhasePosition + 1
               ].matches.push(data);
               this.dataSourceMatches = new MatTableDataSource<TournamentGraph>(
                 this.tournamentGraph
@@ -362,6 +370,32 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
         drawPosition++;
         i += 2; //taking matches in pairs
       }
+    } else {
+      let winnerText = "";
+      for (let i = 0; i < localTournamentPhase.matches.length; i++) {
+        if (
+          //setting the match host in the next phase
+          localTournamentPhase.matches[i].scoreHome >
+          localTournamentPhase.matches[i].scoreGuest
+        ) {
+          winnerText +=
+            localTournamentPhase.matches[i].idHomeUser +
+            " - " +
+            localTournamentPhase.matches[i].idHomeTeam;
+        } else {
+          winnerText +=
+            localTournamentPhase.matches[i].idGuestUser +
+            " - " +
+            localTournamentPhase.matches[i].idGuestTeam;
+        }
+      }
+      console.log(winnerText);
+      // const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      //   width: "250px",
+      //   data: winnerText
+      // });
+
+      // dialogRef.afterClosed().subscribe(result => {});
     }
 
     // { match.idTournament, match.id, match.scoreHome, match.scoreGuest }
@@ -413,3 +447,26 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 }
+
+// @Component({
+//   selector: "dialog-overview-example-dialog",
+//   template: `
+//     <h1 mat-dialog-title>Winner of tournament</h1>
+//     <div mat-dialog-content>
+//       <p>data</p>
+//     </div>
+//     <div mat-dialog-actions>
+//       <button mat-button (click)="onNoClick()">Close</button>
+//     </div>
+//   `
+// })
+// class DialogOverviewExampleDialog {
+//   constructor(
+//     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+//     @Inject(MAT_DIALOG_DATA) public data: string
+//   ) {}
+
+//   onNoClick(): void {
+//     this.dialogRef.close();
+//   }
+// }

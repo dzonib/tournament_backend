@@ -17,7 +17,10 @@ import { MaterialModule } from "./material.module";
 import { HeaderComponent } from "./components/header/header.component";
 import { DataModule } from "./data/stores/store.module";
 import { TournamentFormComponent } from "./components/tournament-form/tournament-form.component";
-import { TournamentGraphComponent } from "./components/tournament-graph/tournament-graph.component";
+import {
+  TournamentGraphComponent,
+  DialogOverviewExampleDialog
+} from "./components/tournament-graph/tournament-graph.component";
 
 @NgModule({
   declarations: [
@@ -52,5 +55,6 @@ import { TournamentGraphComponent } from "./components/tournament-graph/tourname
     }
   ],
   bootstrap: [AppComponent]
+  // entryComponents: [DialogOverviewExampleDialog]
 })
 export class AppModule {}

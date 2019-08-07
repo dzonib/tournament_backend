@@ -8,6 +8,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatSelectModule } from "@angular/material/select";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
+import { MatDialogModule } from "@angular/material/dialog";
 
 import { MatDatepickerModule, MatNativeDateModule } from "@angular/material";
 
@@ -23,7 +24,8 @@ import { MatDatepickerModule, MatNativeDateModule } from "@angular/material";
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ],
   exports: [
     MatInputModule,
@@ -36,7 +38,8 @@ import { MatDatepickerModule, MatNativeDateModule } from "@angular/material";
     MatDatepickerModule,
     MatNativeDateModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    MatDialogModule
   ]
 })
 export class MaterialModule {}
