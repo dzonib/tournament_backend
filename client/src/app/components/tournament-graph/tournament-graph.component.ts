@@ -35,11 +35,11 @@ import {
   TournamentPhase,
   TournamentGraph
 } from "src/app/data/models/tournament";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from "@angular/material/dialog";
+// import {
+//   MatDialog,
+//   MatDialogRef,
+//   MAT_DIALOG_DATA
+// } from "@angular/material/dialog";
 
 @Component({
   selector: "app-tournament-graph",
@@ -81,9 +81,8 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     private store: Store<State>,
     private route: ActivatedRoute,
     private matchService: MatchService, // private _formBuilder: FormBuilder
-    private tournamentService: TournamentService
-  ) // public dialog: MatDialog
-  {
+    private tournamentService: TournamentService // public dialog: MatDialog
+  ) {
     // this.tournamentGraphGroup = this._formBuilder.group({});
   }
 
@@ -92,7 +91,9 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       this.tournamentId = params.id;
     });
     //GET MATCHES
-    this.store.dispatch(new GetAllMatches(this.tournamentId));
+    setTimeout(() => {
+      this.store.dispatch(new GetAllMatches(this.tournamentId));
+    }, 2000);
     this.subs.sink = this.store.select(selectAllMatches).subscribe(data => {
       this.matches = data;
 
@@ -257,6 +258,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
       .subscribe(data => {
         console.log("FINISH MATCH");
         console.log(data);
+        console.log("----------------------------------");
         // matchForFinish.deleted = data["deleted"];
       });
 

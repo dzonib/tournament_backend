@@ -10,7 +10,7 @@ router.get("/:idTournament", async (req, res, next) => {
   try {
     const idTournament = req.params.idTournament;
 
-    const match = await Match.findAll({
+    const matches = await Match.findAll({
       where: { idTournament: idTournament },
       include: [
         { attributes: ["name"], model: User, as: "homeUser" },
@@ -20,7 +20,9 @@ router.get("/:idTournament", async (req, res, next) => {
       ]
     });
 
-    res.json(match);
+    console.log("MATCHES ", matches);
+
+    res.json(matches);
   } catch (e) {
     console.log(e.message);
   }

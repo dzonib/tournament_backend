@@ -11,6 +11,7 @@ export class TournamentService {
   constructor(private http: HttpClient) {}
 
   createTournament(data) {
+    console.log("DATA FROM TOURNAMENT CREATION DATA", data);
     return this.http.post<{ id: any }>(
       `${this.host}/tournament/register`,
       data

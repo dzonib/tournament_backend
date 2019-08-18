@@ -11,8 +11,8 @@ main {
 }
 
 .finish-btn {
-  width: 120px;
-  margin: 0 0 10px 28%;
+  width: 110px;
+  margin: 0 0 -15px 50%;
 }
 .input-container {
   display: flex;
@@ -39,7 +39,7 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 400px;
+  width: 500px;
   list-style: none;
   padding: 0;
 }
@@ -78,6 +78,7 @@ li.game span {
 
 li.game-top {
   border-bottom: 1px solid #aaa;
+  font-size: 13px;
 }
 
 li.game-spacer {
@@ -87,6 +88,7 @@ li.game-spacer {
 
 li.game-bottom {
   border-top: 1px solid #aaa;
+  font-size: 13px;
 }
 .mid-spacer {
   height: 1px;

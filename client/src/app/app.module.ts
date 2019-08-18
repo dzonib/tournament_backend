@@ -18,8 +18,8 @@ import { HeaderComponent } from "./components/header/header.component";
 import { DataModule } from "./data/stores/store.module";
 import { TournamentFormComponent } from "./components/tournament-form/tournament-form.component";
 import {
-  TournamentGraphComponent,
-  DialogOverviewExampleDialog
+  TournamentGraphComponent
+  //DialogOverviewExampleDialog
 } from "./components/tournament-graph/tournament-graph.component";
 
 @NgModule({

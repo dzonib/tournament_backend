@@ -1,0 +1,12 @@
+.container {
+  height: calc(100vh - 64px);
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+button {
+  width: 20rem;
+  height: 20rem;
+  font-size: 1.5rem;
+}

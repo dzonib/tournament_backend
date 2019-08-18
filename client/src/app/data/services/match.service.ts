@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Match } from "../models/match";
 import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
@@ -13,6 +14,8 @@ export class MatchService {
 
   getAllMatches(id): Observable<Match[]> {
     return this.http.get<Match[]>(`http://localhost:5000/matches/${id}`);
+    // returns 3 matches on first go only
+    // .pipe(tap(match => console.log(match)));
   }
 
   getMatch(idTournament, idMatch): Observable<Match> {

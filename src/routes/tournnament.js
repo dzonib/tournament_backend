@@ -51,11 +51,10 @@ router.post("/register", async (req, res, next) => {
   };
 
   // TOURNAMENT DRAW**************************************
-  (function god(teams, players) {
+  (async function god(teams, players) {
     const playersIds = genRandom(players);
     let incrementer = 0;
-
-    return teams
+    return await teams
       .reduce((accumulation, team) => {
         accumulation = [...accumulation, [team, playersIds[incrementer]]];
         incrementer++;
@@ -68,25 +67,35 @@ router.post("/register", async (req, res, next) => {
             : accumulation[accumulation.length - 1].push(value)) && accumulation
         );
       }, [])
-      .map(async (items, index) => {
-        match = await Match.create({
-          scoreHome: 0,
-          scoreGuest: 0,
-          drowPosition: index + 1,
-          phaseName: getPhaseNameByPlayersNumber(
-            tournament.numberOfPlayers - 1
-          ),
-          deleted: false,
-          idHomeTeam: items[0][0].id,
-          idGuestTeam: items[1][0].id,
-          idTournament: tournament.id,
-          idHomeUser: items[0][1].id,
-          idGuestUser: items[1][1].id
-        });
+      .forEach(async (items, index) => {
+        // we are getting all teams here
+        // console.log("ITEMS FROM MAP ", items);
+        try {
+          match = await Match.create({
+            scoreHome: 0,
+            scoreGuest: 0,
+            drowPosition: index + 1,
+            phaseName: getPhaseNameByPlayersNumber(
+              tournament.numberOfPlayers - 1
+            ),
+            deleted: false,
+            idHomeTeam: items[0][0].id,
+            idGuestTeam: items[1][0].id,
+            idTournament: tournament.id,
+            idHomeUser: items[0][1].id,
+            idGuestUser: items[1][1].id
+          });
+        } catch (e) {
+          console.log(e.message);
+        }
 
-        console.log(JSON.stringify(match));
+        // when everything is ok (this logs before matches)
+        // when this runs last (after the route return it brakes)
+        console.log("AFTER EVERY MATCH IS ADDED", JSON.stringify(match));
       });
   })(teams, players);
+
+  console.log("THIS SHOULD RUN AFTER EVERY MATCH IS ADDED");
 
   return res.json({ id: tournament.id });
 });
@@ -94,10 +103,10 @@ router.post("/register", async (req, res, next) => {
 //*************************
 router.put("/next-round/:tournamentId/:matchId", async (req, res) => {
   try {
-    console.log("Finish ------------ GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    // console.log("Finish ------------ GAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     const { tournamentId, matchId } = req.params;
 
-    console.log(req.params);
+    // console.log(req.params);
     const tournament = await Tournament.findByPk(tournamentId);
     const currentMatch = await Match.findByPk(matchId); //ADDED
 
