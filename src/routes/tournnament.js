@@ -91,11 +91,8 @@ router.post("/register", async (req, res, next) => {
 
         // when everything is ok (this logs before matches)
         // when this runs last (after the route return it brakes)
-        console.log("AFTER EVERY MATCH IS ADDED", JSON.stringify(match));
       });
   })(teams, players);
-
-  console.log("THIS SHOULD RUN AFTER EVERY MATCH IS ADDED");
 
   return res.json({ id: tournament.id });
 });

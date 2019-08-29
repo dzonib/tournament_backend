@@ -1,288 +1,240 @@
 <!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
   {{ !isLinear ? "Enable linear mode" : "Disable linear mode" }}
 </button> -->
-<mat-horizontal-stepper [linear]="isLinear" #stepper>
+<mat-horizontal-stepper [linear]="isLinear"
+                        #stepper>
   <!--NUMBER OF PLAYERS-->
   <mat-step [stepControl]="thirdFormGroup">
     <form [formGroup]="thirdFormGroup">
       <ng-template matStepLabel>Tournaments</ng-template>
       <br />
-
       <mat-form-field>
         <mat-label>Select number of participants </mat-label>
-        <mat-select
-          matNativeControl
-          required
-          [formControl]="numberFormControl"
-          (selectionChange)="numberOfPlayersSelectionChange($event)"
-        >
+        <mat-select matNativeControl
+                    required
+                    [formControl]="numberFormControl"
+                    (selectionChange)="numberOfPlayersSelectionChange($event)">
           <mat-option>--</mat-option>
-          <mat-option
-            *ngFor="let num of numberOfParticipants"
-            [value]="num.value"
-          >
-            {{ num.key }}
-          </mat-option>
+          <mat-option *ngFor="let num of numberOfParticipants"
+                      [value]="num.value"> {{ num.key }} </mat-option>
         </mat-select>
-        <mat-error *ngIf="numberFormControl.hasError('required')"
-          >Please choose number</mat-error
-        >
+        <mat-error *ngIf="numberFormControl.hasError('required')">Please choose number</mat-error>
       </mat-form-field>
-
       <br />
-
       <mat-form-field class="input">
-        <input
-          type="nameOfTournament"
-          matInput
-          formControlName="nameOfTournament"
-          placeholder="Name of tournament"
-        /><mat-error *ngIf="nameOfTournament.hasError('required')"
-          >Name of tournament is required!</mat-error
-        >
+        <input type="nameOfTournament"
+               matInput
+               formControlName="nameOfTournament"
+               placeholder="Name of tournament" />
+        <mat-error *ngIf="nameOfTournament.hasError('required')">Name of tournament is required!</mat-error>
       </mat-form-field>
-
       <br />
-
       <mat-form-field>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          placeholder="Select date"
-          [formControl]="beginDate"
-        />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <input matInput
+               [matDatepicker]="picker"
+               placeholder="Select date"
+               [formControl]="beginDate" />
+        <mat-datepicker-toggle matSuffix
+                               [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-
       <div>
-        <button
-          [disabled]="
+        <button [disabled]="
             numberFormControl.value <= 0 || nameOfTournament.value.length <= 0
           "
-          mat-raised-button
-          disableRipple
-          color="accent"
-          matStepperNext
-        >
-          Next
-        </button>
+                mat-raised-button
+                disableRipple
+                color="accent"
+                matStepperNext> Next </button>
       </div>
     </form>
   </mat-step>
-
   <!--PLAYERS-->
-
   <mat-step [stepControl]="secondFormGroup">
     <div *ngIf="selectionForPlayers.selected.length > 0">
       <h2>Selected Players</h2>
-      <p
-        *ngFor="let player of selectionForPlayers.selected; let i = index"
-        class="name"
-      >
-        {{ i + 1 }}. {{ player.name + " " + player.surname }}
-        <span class="rmv" (click)="removeUser(player)">X</span>
+      <p *ngFor="let player of selectionForPlayers.selected; let i = index"
+         class="name"> {{ i + 1 }}. {{ player.name + " " + player.surname }} <span class="rmv"
+              (click)="removeUser(player)">X</span>
       </p>
-      <h3
-        *ngIf="numberOfParticipantsVal <= selectionForPlayers.selected.length"
-      >
-        You have finished player selection step, click next to continue
-      </h3>
+      <h3 *ngIf="numberOfParticipantsVal <= selectionForPlayers.selected.length"> You have finished player selection
+        step, click next to continue </h3>
     </div>
-
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Select Players</ng-template>
       <br />
-      <table
-        mat-table
-        [dataSource]="dataSourcePlayers"
-        class="mat-elevation-z8"
-        *ngIf="numberOfParticipantsVal !== selectionForPlayers.selected.length"
-      >
+      <table mat-table
+             [dataSource]="dataSourcePlayers"
+             class="mat-elevation-z8"
+             *ngIf="numberOfParticipantsVal !== selectionForPlayers.selected.length">
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="$event ? masterTogglePlayers() : null"
-              [checked]="
+          <th mat-header-cell
+              *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterTogglePlayers() : null"
+                          [checked]="
                 selectionForPlayers.hasValue() && isAllSelectedPlayers()
               "
-              [indeterminate]="
+                          [indeterminate]="
                 selectionForPlayers.hasValue() && !isAllSelectedPlayers()
               "
-              [aria-label]="checkboxLabelPlayers()"
-            >
+                          [aria-label]="checkboxLabelPlayers()">
             </mat-checkbox>
           </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? selectionForPlayers.toggle(row) : null"
-              [checked]="selectionForPlayers.isSelected(row)"
-              [aria-label]="checkboxLabelPlayers(row)"
-              [disabled]="
+          <td mat-cell
+              *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selectionForPlayers.toggle(row) : null"
+                          [checked]="selectionForPlayers.isSelected(row)"
+                          [aria-label]="checkboxLabelPlayers(row)"
+                          [disabled]="
                 numberOfParticipantsVal <= selectionForPlayers.selected.length
-              "
-            >
+              ">
             </mat-checkbox>
           </td>
         </ng-container>
-
         <!-- Position Column -->
         <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td mat-cell *matCellDef="let element">{{ element.position }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>No.</th>
+          <td mat-cell
+              *matCellDef="let element">{{ element.position }}</td>
         </ng-container>
-
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>Name</th>
+          <td mat-cell
+              *matCellDef="let element">{{ element.name }}</td>
         </ng-container>
-
         <!-- Surname Column -->
         <ng-container matColumnDef="surname">
-          <th mat-header-cell *matHeaderCellDef>Surname</th>
-          <td mat-cell *matCellDef="let element">{{ element.surname }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>Surname</th>
+          <td mat-cell
+              *matCellDef="let element">{{ element.surname }}</td>
         </ng-container>
-
         <!-- Username Column -->
         <ng-container matColumnDef="username">
-          <th mat-header-cell *matHeaderCellDef>Username</th>
-          <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>Username</th>
+          <td mat-cell
+              *matCellDef="let element">{{ element.username }}</td>
         </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsForPlayers"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumnsForPlayers"
-          (click)="selectionForPlayers.toggle(row)"
-        ></tr>
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumnsForPlayers"></tr>
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumnsForPlayers"
+            (click)="selectionForPlayers.toggle(row)"></tr>
       </table>
     </form>
-    <div
-      *ngIf="numberFormControl.value === selectionForPlayers.selected.length"
-    >
-      <button mat-raised-button disableRipple color="accent" matStepperPrevious>
-        Back
-      </button>
-      <button mat-raised-button disableRipple color="accent" matStepperNext>
-        Next
-      </button>
+    <div *ngIf="numberFormControl.value === selectionForPlayers.selected.length">
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              matStepperPrevious> Back </button>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              matStepperNext> Next </button>
     </div>
   </mat-step>
-
   <!-- TEAMS -->
-
   <mat-step>
-    <h2 *ngIf="dataSource.data.length === 0">
-      Please select league to proceed
-    </h2>
-
+    <h2 *ngIf="dataSource.data.length === 0"> Please select league to proceed </h2>
     <div *ngIf="selection.selected.length > 0">
       <h2>Selected Teams</h2>
-      <p *ngFor="let team of selection.selected; let i = index" class="name">
-        {{ i + 1 }}. {{ team.name }}
-        <span class="rmv" (click)="removeTeam(team)">X</span>
+      <p *ngFor="let team of selection.selected; let i = index"
+         class="name"> {{ i + 1 }}. {{ team.name }} <span class="rmv"
+              (click)="removeTeam(team)">X</span>
       </p>
     </div>
-    <h3 *ngIf="numberOfParticipantsVal <= selection.selected.length">
-      You have finished team selection step, click next to continue
-    </h3>
+    <h3 *ngIf="numberOfParticipantsVal <= selection.selected.length"> You have finished team selection step, click next
+      to continue </h3>
     <!-- FOR DEBUGGING, REMOVE LATER -->
     <!-- <button (click)="logSelection()">Check Selection</button> -->
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Select Teams</ng-template>
-      <mat-form-field
-        *ngIf="numberOfParticipantsVal !== selection.selected.length"
-      >
+      <mat-form-field *ngIf="numberOfParticipantsVal !== selection.selected.length">
         <mat-label>Select League </mat-label>
-        <mat-select
-          matNativeControl
-          required
-          [formControl]="leagueFormControl"
-          (selectionChange)="leagueSelection($event)"
-        >
+        <mat-select matNativeControl
+                    required
+                    [formControl]="leagueFormControl"
+                    (selectionChange)="leagueSelection($event)">
           <mat-option>--</mat-option>
-          <mat-option *ngFor="let num of leagues" [value]="num.key">
-            {{ num.key }}
-          </mat-option>
+          <mat-option *ngFor="let num of leagues"
+                      [value]="num.key"> {{ num.key }} </mat-option>
         </mat-select>
-        <mat-error *ngIf="leagueFormControl.hasError('required')"
-          >Please choose number</mat-error
-        >
+        <mat-error *ngIf="leagueFormControl.hasError('required')">Please choose number</mat-error>
       </mat-form-field>
       <br />
-      <table
-        mat-table
-        [dataSource]="dataSource"
-        class="mat-elevation-z8"
-        *ngIf="
+      <table mat-table
+             [dataSource]="dataSource"
+             class="mat-elevation-z8"
+             *ngIf="
           dataSource.data.length !== 0 &&
           numberOfParticipantsVal !== selection.selected.length
-        "
-      >
+        ">
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
-          <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox
-              (change)="$event ? masterToggle() : null"
-              [checked]="selection.hasValue() && isAllSelected()"
-              [indeterminate]="selection.hasValue() && !isAllSelected()"
-              [aria-label]="checkboxLabel()"
-            >
+          <th mat-header-cell
+              *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()"
+                          [aria-label]="checkboxLabel()">
             </mat-checkbox>
           </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-checkbox
-              (click)="$event.stopPropagation()"
-              (change)="$event ? selection.toggle(row) : null"
-              [checked]="selection.isSelected(row)"
-              [aria-label]="checkboxLabel(row)"
-              [disabled]="numberOfParticipantsVal <= selection.selected.length"
-            >
+          <td mat-cell
+              *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()"
+                          (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)"
+                          [aria-label]="checkboxLabel(row)"
+                          [disabled]="numberOfParticipantsVal <= selection.selected.length">
             </mat-checkbox>
           </td>
         </ng-container>
-
         <!-- Name Column -->
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let team">{{ team.name }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>Name</th>
+          <td mat-cell
+              *matCellDef="let team">{{ team.name }}</td>
         </ng-container>
-
         <ng-container matColumnDef="banner">
-          <th mat-header-cell *matHeaderCellDef>Banner</th>
-          <td mat-cell *matCellDef="let team">{{ team.bannerUrl }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>Banner</th>
+          <td mat-cell
+              *matCellDef="let team"><img [src]="team.bannerUrl"
+                 alt=""></td>
         </ng-container>
-
         <ng-container matColumnDef="league">
-          <th mat-header-cell *matHeaderCellDef>League</th>
-          <td mat-cell *matCellDef="let team">{{ team.leagueName }}</td>
+          <th mat-header-cell
+              *matHeaderCellDef>League</th>
+          <td mat-cell
+              *matCellDef="let team">{{ team.leagueName }}</td>
         </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          (click)="selection.toggle(row)"
-        ></tr>
+        <tr mat-header-row
+            *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selection.toggle(row)"></tr>
       </table>
     </form>
     <div *ngIf="numberFormControl.value === selection.selected.length">
-      <button mat-raised-button disableRipple color="accent" matStepperPrevious>
-        Back
-      </button>
-      <button mat-raised-button disableRipple color="accent" matStepperNext>
-        Next
-      </button>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              matStepperPrevious> Back </button>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              matStepperNext> Next </button>
     </div>
   </mat-step>
-
   <mat-step>
-    <div
-      *ngIf="nameOfTournament.value.length > 0 && numberFormControl.value > 0"
-    >
+    <div *ngIf="nameOfTournament.value.length > 0 && numberFormControl.value > 0">
       <h4>Tournament name: {{ nameOfTournament.value }}</h4>
       <h4>Number of participants: {{ numberFormControl.value }}</h4>
       <h4>Tournament starts at : {{ beginDate.value | date }}</h4>
@@ -290,39 +242,26 @@
     </div>
     <div *ngIf="selectionForPlayers.selected.length > 0">
       <h4>Players participating:</h4>
-      <p *ngFor="let player of selectionForPlayers.selected; let i = index">
-        {{ i + 1 }} {{ player.name }}
-      </p>
+      <p *ngFor="let player of selectionForPlayers.selected; let i = index"> {{ i + 1 }} {{ player.name }} </p>
       <hr />
     </div>
     <div *ngIf="selection.selected.length > 0">
       <h4>Teams selected:</h4>
-      <p *ngFor="let team of selection.selected; let i = index">
-        {{ i + 1 }} {{ team.name }}
-      </p>
+      <p *ngFor="let team of selection.selected; let i = index"> {{ i + 1 }} {{ team.name }} </p>
     </div>
-    <ng-template matStepLabel>Done</ng-template>
-    You are now done.
-    <div>
-      <button mat-raised-button disableRipple color="accent" matStepperPrevious>
-        Back
-      </button>
-      <button
-        mat-raised-button
-        disableRipple
-        color="accent"
-        (click)="stepper.reset()"
-      >
-        Reset
-      </button>
-      <button
-        mat-raised-button
-        disableRipple
-        color="accent"
-        (click)="createTournament()"
-      >
-        Finish
-      </button>
+    <ng-template matStepLabel>Done</ng-template> You are now done. <div>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              matStepperPrevious> Back </button>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              (click)="stepper.reset()"> Reset </button>
+      <button mat-raised-button
+              disableRipple
+              color="accent"
+              (click)="createTournament()"> Finish </button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>

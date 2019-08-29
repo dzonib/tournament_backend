@@ -93,3 +93,20 @@ li.game-bottom {
 .mid-spacer {
   height: 1px;
 }
+
+.bold-winner {
+  font-weight: bold;
+}
+
+.trophy-div {
+  margin: 40px;
+  display: grid;
+  justify-content: center;
+}
+
+.trophy {
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+  justify-self: center;
+}

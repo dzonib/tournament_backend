@@ -12,16 +12,18 @@
       <td mat-cell
           *matCellDef="let element; let i = index;">
         <ul class="round round-1">
-          <ng-container *ngFor="let match of element.tournamentPhases[columnIndex].matches"
+          <ng-container *ngFor="let match of element.tournamentPhases[columnIndex].matches; let testIndex = index;"
                         class="match-container">
             <li class="spacer">&nbsp;</li>
             <button mat-button
                     mat-raised-button
                     color="accent"
-                    class="finish-btn"
+                    [ngClass]="{'finish-btn': true}"
                     [disabled]="match.scoreGuest === match.scoreHome"
-                    (click)="finishMatchHandler(match)">Finish Match</button>
-            <li class="game game-top">{{match.homeUser.name}} - {{match.homeTeam.name}} <span class="input-container">
+                    (click)="finishMatchHandler(match, match.homeUser.name)">Finish Match</button>
+            <li
+                [ngClass]="{'game game-top': true, 'bold-winner': homeWinners.includes(match.homeUser.name) && match.phaseName != 'finale'}">
+              {{match.homeUser.name}} - {{match.homeTeam.name}} <span class="input-container">
                 <mat-icon class="icon"
                           title="Add 1 to score"
                           (click)="resultIncrementHandler(match, 'home')">add</mat-icon>
@@ -33,8 +35,9 @@
                           (click)="resultSubtracthandler(match, 'home')">remove</mat-icon>
               </span></li>
             <li class="game game-spacer">&nbsp;&nbsp;</li>
-            <li class="game game-bottom"> {{match.guestUser.name}} - {{match.guestTeam.name}} <span
-                    class="input-container">
+            <li
+                [ngClass]="{'game game-bottom': true, 'bold-winner': awayWinners.includes(match.guestUser.name) && match.phaseName != 'finale'}">
+              {{match.guestUser.name}} - {{match.guestTeam.name}} <span class="input-container">
                 <mat-icon class="icon"
                           title="Add 1 to score"
                           (click)="resultIncrementHandler(match, 'guest')">add</mat-icon> <input type="text"
@@ -53,6 +56,13 @@
     <tr mat-row
         *matRowDef="let row; columns: displayedGraphColumns;"></tr>
   </table>
+  <div class="trophy-div"
+       *ngIf="winner">
+    <img class="trophy"
+         src="https://i.ebayimg.com/images/g/~noAAOSwH2RcPwb-/s-l300.jpg"
+         alt="">
+    <h1>{{winner?.name}} is the winner!!!</h1>
+  </div>
   <!-- <ng-container>
     <ul class="round round-2">
       <li class="spacer">&nbsp;</li>

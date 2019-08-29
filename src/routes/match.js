@@ -20,8 +20,6 @@ router.get("/:idTournament", async (req, res, next) => {
       ]
     });
 
-    console.log("MATCHES ", matches);
-
     res.json(matches);
   } catch (e) {
     console.log(e.message);

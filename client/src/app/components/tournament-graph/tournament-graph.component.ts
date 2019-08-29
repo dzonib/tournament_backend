@@ -54,6 +54,9 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
   matches: Match[] = [];
   matches2: Match[] = [];
 
+  homeWinners = [];
+  awayWinners = [];
+
   // NEW *******************
   phases: PHASE[] = [
     PHASE.FINALE,
@@ -67,6 +70,7 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
   tournamentGraph: TournamentGraph[] = []; //we will have one graph but the table receives a array for the data source
   numberOfPhases: number = 0;
 
+  winner: any;
   // ***********************
 
   // tournamentGraphGroup: FormGroup;
@@ -252,14 +256,40 @@ export class TournamentGraphComponent implements OnInit, OnDestroy {
     }
   }
 
-  finishMatchHandler(matchForFinish: Match) {
+  finishMatchHandler(matchForFinish: Match, name) {
+    console.log(matchForFinish);
+    // this.awayWinners = [];
+    // this.homeWinners = [];
+    if (matchForFinish.scoreGuest > matchForFinish.scoreHome) {
+      this.awayWinners.push(matchForFinish.guestUser.name);
+    }
+    if (matchForFinish.scoreGuest < matchForFinish.scoreHome) {
+      this.homeWinners.push(matchForFinish.homeUser.name);
+    }
+
     this.subs.sink = this.tournamentService
       .finishMatch(matchForFinish)
-      .subscribe(data => {
+      .subscribe((data: Match) => {
         console.log("FINISH MATCH");
-        console.log(data);
+        console.log(data, "THIS AAAA");
+
+        if (
+          data[0].scoreHome > data[0].scoreGuest &&
+          data[0].phaseName === "finale"
+        ) {
+          console.log("ASAAAAAA", data[0].phaseName);
+          this.winner = data[0].homeUser;
+        } else if (
+          data[0].scoreHome < data[0].scoreGuest &&
+          data[0].phaseName === "finale"
+        ) {
+          console.log("OMGGG", data[0].phaseName);
+          this.winner = data[0].guestUser;
+        }
         console.log("----------------------------------");
         // matchForFinish.deleted = data["deleted"];
+
+        console.log(this.winner, "winner");
       });
 
     let currentPhase = matchForFinish.phaseName;
